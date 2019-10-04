@@ -1,5 +1,5 @@
 ---
-title: "Journal"
+title: "Class Notes"
 output:
   html_document:
     toc: true
@@ -14,115 +14,447 @@ output:
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
 
-IMPORTANT: You can delete everything in here and start fresh. You might want to start by not deleting anything above this line until you know what that stuff is doing.
+#Class 1: 09/12/19
 
+##Built in Functions
+-There are special commands in R that allow you to solve simple math problems 
+-You can find the sum, mean, 
 
-This is an .Rmd file. It is plain text with special features. Any time you write just like this, it will be compiled to normal text in the website. If you put a \# in front of your text, it will create a top level-header.
+```{r, eval=FALSE}
+x <-c (1,2,3)
 
-# My first post
+sum(x)
+length(x) #length of vector 
+var(x) #variance of vector 
+range(x) #returns highest value and lowest value
+sd(x)
+sqrt(x)
 
-2018 | 7 | 23 Last compiled: `r Sys.Date()`
+sort(x) #automatically sorts values in increasing order. 
+sort(x, decreasing=TRUE) #sorts values in decreasing order 
 
-Notice that whatever you define as a top level header, automatically gets put into the table of contents bar on the left. 
+sort(x)[1] #Returns the first number in the values sorted by small to big AKA the smallest number!
 
-## Second level header
+unique(x) #Returns the unique (different) elements of x
+table(x) #Returns the frequencies of x
+class(x) #Returns the type of value that x is 
 
-You can add more headers by adding more hashtags. These won't be put into the table of contents
-
-### third level header
-
-Here's an even lower level header
-
-# My second post (note the order)
-
-2018 | 7 | 23 Last compiled: `r Sys.Date()`
-
-I'm writing this tutorial going from the top down. And, this is how it will be printed. So, notice the second post is second in the list. If you want your most recent post to be at the top, then make a new post starting at the top. If you want the oldest first, do, then keep adding to the bottom
-
-# Adding R stuff
-
-So far this is just a blog where you can write in plain text and serve your writing to a webpage. One of the main purposes of this lab journal is to record your progress learning R. The reason I am asking you to use this process is because you can both make a website, and a lab journal, and learn R all in R-studio. This makes everything really convenient and in the sam place. 
-
-So, let's say you are learning how to make a histogram in R. For example, maybe you want to sample 100 numbers from a normal distribution with mean = 0, and standard deviation =1, and then you want to plot a histogram. You can do this right here by using an r code block, like this:
-
-```{r}
-samples <- rnorm(100, mean=0, sd=1)
-hist(samples)
-```
-
-When you knit this R Markdown document, you will see that the histogram is printed to the page, along with the R code. This document can be set up to hide the R code in the webpage, just delete the comment (hashtag), from the cold folding option in the yaml header up top. For purposes of letting yourself see the code, and me see the code, best to keep it the way that it is. You learn all of these things and more can be customized in each R code block.
-
-# The big idea
-
-Use this lab journal to record what you do in R. This way I will be able to see what you are doing and help you along the way. You will also be creating a repository of all the things you do. You can make posts about everything. Learning specific things in R (project unrelated), and doing things for the project that we will discuss at the beginning of the Fall semester. You can get started now by fiddling around with googling things, and trying stuff out in R. I've placed some helpful starting links in the links page on this website
-
-# What can you do right now by yourself?
-
-It's hard to learn programming when you don't have specific problems that you are trying to solve. Everything just seems abstract.
-
-I wrote an [introductory programming book that introduces R](https://crumplab.github.io/programmingforpsych/), and gives some [concrete problems for you to solve](https://crumplab.github.io/programmingforpsych/programming-challenges-i-learning-the-fundamentals.html). 
-
-To get the hang of journaling and solving the problems to learn programming, my suggestion is that you use this .Rmd file to solve the problems. It would look like this:
-
-# Problem 1
-
-Do simple math with numbers, addition, subtraction, multiplication, division
-
-```{r}
-1+2
-2*5
-5/3
-(1+6+4)/5
 
 ```
 
-# Problem 2
+-You can create your own functions 
 
-Put numbers into variables, do simple math on the variables
-
-```{r}
-a<-1
-b<-2
-a+b
-
-d<-c(1,2,3)
-e<-c(5,6,7)
-d+e
-d*e
-d/e
-
-```
-
-# Problem 3
-
-Write code that will place the numbers 1 to 100 separately into a variable using for loop. Then, again using the seq function.
-
-```{r}
-# for loop solution
-# i becomes the number 1 to 100 at each step of the loop
-
-
-a <- length(100) # make empty variable, set length to 100
-for (i in 1:100){
-  a[i] <-i #assigns the number in i, to the ith index of a
+```{r, eval=FALSE}
+name_of_function <- function(){
+  
+  return(result)
+  
+#Simply but the input in the () next to function, and tell what you want to return in the () of return
 }
 
-print(a)
 
-# for loop solution #2
+```
+ 
+-Example of writing a simple function
+```{r, eval=FALSE}
 
-a<-c() #create empty variable using combine command
-for (i in 1:100){
-  a<-c(a,i) # keeps combining a with itself and the new number in i
+sum_of_numbers <- function(y){
+  total <- 0
+  for (x in 1:y){
+    total <- total + x
+  }
+  return(total)
 }
-print(a)
+```
 
-# seq solution
-a <- seq(1,100,1) # look up help for seq using ?seq() in console
-print(a)
+##Dealing with values in a table 
+###Creating a matrix
+
+```{r, eval=FALSE}
+my_matrix <- matrix(data=seq(from=1, to=100), nrow=20, ncol=5) #Creates a matrix with the numbers from 1 to 100, with 20 rows and 5 columns 
+
+
+my_matrix["row","column"]
+my_matrix[1,] #Shows you everything in row 1
+my_matrix[,1] #Shows you everything in column 1
+
+my_matrix[c(1,5),] #shows you all of the values in row 1 and 5
+
 
 ```
 
-# Replace this with problem 4
+###Indexing Values in a Matrix
 
-And keep going. Try to solve the problems with different scripts that provide the same solution. Good luck, Happy coding.
+```{r, eval=FALSE}
+c1to20<- 1:20 
+
+my_matrix[c1to20<10,]
+
+df <-data.frame(my_matrix)
+
+
+```
+
+
+###Installing data packages 
+```{r, eval=FALSE}
+install.packages("babynames")
+library(babynames)
+
+babynames[babynames$year == 2017 & babynames$sex == "F", ]
+```
+
+
+#Class 3: Packages 
+```{r, eval=FALSE}
+install.packages('dplyr')
+install.packages('ggplot')
+
+library(dplyr)
+library(babynames)
+
+```
+
+##Selecting columns 
+```{r, eval=FALSE}
+select(babynames,year,name) #Using the select function
+babynames[c('year', 'name')] #Using indexing
+
+
+```
+
+
+##Filter Function
+```{r, eval=FALSE}
+babynames %>%
+  filter(year==1950 & sex=='F') %>%
+  select(name)
+
+#In dplyr you can use "%>%" to indicate that you are performing that function within some data set
+#%>% indicates that you are taking the output of the previous statement, and using it as the input for the following function
+#This function allows you to write the code in a shorter, but understandable way instead of writing a function like this: select(filter(babynames, year > 1950), name)
+
+```
+
+
+##Summarize dataset
+```{r, eval=FALSE}
+
+babynames %>%
+  summarise(first_year = min(year),
+            last_year = max(year),
+            mean_N = mean(n),
+            std_N = sd(n),
+            N = length(n))
+
+#You are assigning values to a certain name but you are using "=" instead of "<-"
+
+```
+
+##Group By 
+```{r, eval=FALSE}
+babynames %>%
+  group_by(sex)
+  
+```
+
+##Combining these dply functions 
+```{r, eval=FALSE}
+babynames %>%
+  filter(year==1950 & sex=='F') %>%
+  summarise(first_year = min(year),
+            last_year = max(year),
+            mean_N = mean(n),
+            std_N = sd(n),
+            N = length(n))
+```
+
+
+##Using ggplot2
+```{r, eval=FALSE}
+
+install.packages('gapminder') #gapminder is a useful dataset
+install.packages('ggplot2')
+library(gapminder)
+library(ggplot2)
+
+data <- gapminder
+
+```
+
+```{r, eval=FALSE}
+lifeexp_by_year <- data %>%
+  group_by(year) %>% 
+  summarise(avg_life = mean(lifeExp))
+
+#Summarise should be last! Final output of what you have already filtered or selected 
+
+
+```
+
+
+```{r, eval=FALSE}
+#First command is always "ggplot" 
+
+
+ggplot(lifeexp_by_year, aes(x=year, y=avg_life)) + #Must add "+" at the end of every separate line
+  geom_point() + #makes a scatter point
+  geom_line() #makes a line graph. ALSO has points because of above command
+
+#aes is the command for the aesthetic. You can change the way the graph looks by adding to this function
+
+
+```
+
+##Making a bar graph 
+```{r, eval=FALSE}
+lifeexp_by_continent <- data %>%
+  group_by(continent) %>% 
+  summarise(avg_life = mean(lifeExp))
+
+
+ggplot(lifeexp_by_continent, aes(x=continent, 
+                                      y=avg_life,
+                                      fill=continent)) + 
+  geom_bar(stat = 'identity') #Must say "stat='identity'"
+
+#Changing the type of graph will often mean you want to change the order of the aes, depending on what you want to look 
+#You also want to change "color" to "fill" so the colors are solid 
+
+
+```
+
+
+##Making a line graph
+```{r, eval=FALSE}
+
+lifeexp_by_continent <- data %>%
+  group_by(continent) %>% 
+  summarise(avg_life = mean(lifeExp))
+
+
+ggplot(lifeexp_by_year_continent, aes(x=year, 
+                                      y=avg_life,
+                                      color=continent)) + 
+  geom_point() + 
+  geom_line() +
+#You can also change the general look of the plot by changing the "theme"
+  theme_minimal()
+
+
+
+```
+
+
+##Making a histgram
+```{r, eval=FALSE}
+ggplot(data, aes(x=lifeExp)) +
+      geom_histogram(bins=20) +
+      ggtitle("Av") +
+      xlab("Years") +
+      ylab("Number of People") 
+
+
+```
+
+#Class 4: 09.26.19 
+
+##Dplyr vs. Other methods 
+```{r, eval=FALSE}
+library(babynames)
+library(dplyr)
+```
+
+```{r, eval=FALSE}
+#Mutate: Used when you want to change columns or if you want to add a column
+
+data <- babynames
+
+#If you want to change your proportion to percentages 
+
+babynames$prop *100 #This will not change the values in the columns but will give you percentage. 
+
+#Use mutate to add values to the data itself 
+
+percentage_data <- data %>%
+  mutate(prop_percentage=prop*100)
+
+```
+
+
+
+```{r, eval=FALSE}
+data_name <- data %>%
+  arrange(name) #allows you to change the order of the names. This is alphabetial order starting at a
+
+
+data_year <- data %>% #using "desc" allows your to have it from smaller to larger 
+  arrange(desc(n))
+
+
+data_most_pop_2010 <- data %>%
+  filter(year > 2000 & year < 2010) %>%
+  group_by(year, sex) %>%
+  summarize(max_n=max(n),
+      top_name=name[n==max_n]) 
+  
+  
+  
+unique_names <- data %>%
+  group_by(year,sex) %>%
+  summarize(unique_n = length(unique(name)))
+
+ggplot(unique_names, aes(x=year, y=unique_n, color=sex)) +
+  geom_line(size=1.5)
+
+  
+```
+
+
+
+##If/else statement
+```{r, eval=FALSE}
+
+ifelse(1>0, 'Hey', 'Bye') #Thing to evaluate, "if true", "if false"
+
+data %>%
+  mutate(male=ifelse(sex=='M', 1, 0),
+         female=ifelse(sex=='F', 1,0)) %>%
+  group_by(name) %>%
+  summarize(male_total_n=sum(male),
+            female_total_n=sum(female),
+            count=sum(n)) %>%
+  filter(male_total_n > 3000 & female_total_n > 3000) %>%
+  group_by()
+  
+
+
+```
+
+
+
+#Class 4: Last ggplot and dplyr class 
+
+##Using the mpg dataset and ggplot2
+```{r, eval=FALSE}
+library(ggplot2)
+?mpg
+
+ggplot(data=mpg, aes(x=displ, y=hwy, color=class))+ 
+    #This will have two types of information. Adding "color" gives more info
+  geom_point
+
+
+ggplot(data=mpg, aes(x=displ, y=hwy, shape=cyl))+ 
+    #You can also have the key be formatted according to different "size", "shape"
+  geom_point()
+  
+  
+ggplot(data=mpg, aes(x=displ, y=hwy))+ 
+  geom_point()+
+  facet_wrap(~class) #This command makes a different plot for every class of car, or whatever else you want!
+
+
+ggplot(data=mpg, aes(x=displ, y=hwy))+ 
+  geom_point()+
+  geom_smooth(method='lm') #This gives you a line of best fit! You can 
+
+
+ggplot(data=mpg, aes(x=displ, y=hwy))+ 
+  geom_point(aes(color=class))+ #Defining color here allows you to have colored points (and a key), but an        overall line of best fit 
+  geom_smooth(method='lm', color=black) 
+
+
+ggplot(data=mpg, aes(x=class, y=hwy))+ 
+  geom_boxplot(aes(fill=class)) #A boxplot with colors and filled (instead of "color", which isn't filled)
+
+
+ggplot(data=mpg, aes(x=class, y=hwy))+ 
+  geom_boxplot(aes(fill=class))+
+  coord_flip() #This flips the x and y
+
+```
+
+
+##Using the "NYCflights13" and dplyr
+```{r, eval=FALSE}
+install.packages('nycflights13')
+library(nycflights13)
+library(dplyr)
+
+
+flights %>%
+  select(day, month)
+
+#Finding the most delayed flight
+flights %>%
+  arrange(desc(dep_delay))
+
+
+flights %>%
+  select(year:day)
+
+#You can exclude certain columns in this way: 
+flights %>%
+  select(-c(year,day))
+
+#Put the arrival time first, the dep_delay second and then everything else after 
+flights %>%
+  select(arr_time, dep_delay, everything())
+
+
+#Putting the time in hours and minutes 
+flights %>%
+  mutate(hour=dep_time %/% 100,
+         minutes=dep_time %/% 100) %>%
+  select(dep_time, hour, minutes)
+
+
+#When are flights the most delayed? 
+flights %>%
+  summarize(mean_delay=mean(dep_delay))
+ #This won't run because there are a number of NA's in the dep_delay (canceled flights)
+
+#This is how we delete the NA values. This gives you a value because you have taken out the NA values 
+mean(flights$dep_delay, na.rm=TRUE)
+
+
+#When are flights the most delayed? 
+flights %>%
+  group_by(month) %>%
+  summarize(mean_delay=mean(dep_delay, na.rm=TRUE)) 
+  
+
+#Are international flights more delayed than domestic? 
+dist_vs_delay <- flights %>%
+  group_by(dest) %>%
+  summarize(count=n(),
+            distance=mean(distance, na.rm = TRUE),
+            delay =mean(arr_delay, na.rm = TRUE)) %>%
+  filter(count > 20 & dest!='HNL')
+
+#Graphing the above 
+ggplot(dist_vs_delay, aes(x=distance, y=delay, size=count)) +
+  geom_point()+
+  geom_smooth(method='lm')
+      
+
+```
+
+
+
+##Most canceled flights in what month?
+```{r, eval=FALSE}
+
+canceled <- flights %>% 
+  group_by(month) %>%
+  summarize(count_cancelled=sum(is.na(dep_delay)))
+
+
+
+ggplot(canceled, aes(x=month, y=count_canceled))+
+  geom_line()
+
+#Converts month to a category (factor), and ensures that when you are graphing you don't have partial month numbers 
+
+```
