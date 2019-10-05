@@ -1,0 +1,177 @@
+---
+title: "Assignment 1"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+
+
+x<-10
+
+y <- 11
+
+e <- c(10,11,12,14)
+
+profits <- c(10,11,12)
+SCHOOL_DAYS<- c('mon','tues', 'wed')
+
+profits[11]
+
+profits[c(1,2)]
+TRUE
+FALSE
+
+& and 
+| or
+
+profits >= 10
+
+schooldays <- c("MON",'TUES')
+
+SCHOOL_DAYS<- c('mon','tues', 'wed')
+
+SCHOOL_DAYS[profits>11]
+
+
+SCHOOL_DAYS[!(profits<11 | profits>12)]
+
+if (x!=10){
+  print("YES IT IS TRUE!!")
+} else {
+  print('NO IT IS NOT TRUE!!')
+}
+
+
+while (profits[]<12){
+  print(profits)
+}
+
+
+
+for (x in profits){
+  print(x)
+}
+
+
+#2. Count all of the prime numbers between 1-1000 
+
+smallnum <- 
+for (x in 2:1000){
+  for (s>)
+  if (x%%2==0) {
+    print(x)
+  }
+}
+
+
+for (x in 2:10){
+  for (
+    if (x%%2==0) {
+      print(x)
+    }
+}
+
+
+
+
+counter=0
+for (number in 2:1000) {     
+  if (number%%2!=0 & number%%3!=0 & number%%4!=0 {
+    counter <- counter +1
+  }   
+
+}
+print(number)
+
+
+
+
+
+prime = 2:1000
+temp = 0
+for(val in prime){
+  if (val == 0){
+    next
+  } else if (val == 1){
+    next
+  } else if (val == 2){
+    TRUE
+    temp = val 
+  } else if (val %% temp == 0){
+    next
+    temp = temp + 1
+  }
+  print(val)
+}
+
+
+
+counter <- 0
+for (x in 2:1000) {
+  for (smallerthanx in 2:x) {
+    if (x %% smallerthanx !=0) {
+      counter <- counter+1
+    }
+  }
+}
+print(counter)
+
+
+
+for (x in 2:1000){
+  if (x%%2=1) {
+    print(x)
+  }
+}
+
+
+
+Prime_Numbers <-(1:1000)
+a <- Prime_Numbers%%Prime_Numbers
+if (a==0){
+  a <- Prime_Numbers
+}
+if (a/=0){
+  b <- Prime_Numbers
+print(b)
+}
+
+
+
+##
+
+"COUNTER: HOW MANY BETWEEN 1 AND 100"
+
+1. Write a program that finds the sum of all odd numbers between 200 and 400. You can validate your result using the following command:
+
+  
+  
+total=0
+for (x in 200:400){
+  if (x%%2!=0) {
+    total <- total +x
+  }
+}
+print(total)
+
+
+
+
+total=0
+for (x in 200:400){
+  if (x%%2!=0) {
+    total <- total +x
+  }
+}
+
+##Two possible solutions to problem two 

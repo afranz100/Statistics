@@ -1,0 +1,82 @@
+---
+title: "Assignment 2"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#Exercise 1:
+
+How long are people living? Make a histogram using geom_histogram layer. Experiment with bins and colors (i.e., geom_histogram(bins=20, color=”black”).
+```{r, eval=FALSE}
+install.packages('gapminder') #gapminder is a useful dataset
+install.packages('ggplot2')
+library(gapminder)
+library(ggplot2)
+library(dplyr)
+
+```
+
+```{r, eval=FALSE}
+data <- gapminder
+
+lifeexp_by_year <- data %>%
+  group_by(year) %>% 
+  summarise(avg_life = mean(lifeExp))
+
+
+ggplot(data, aes(x=lifeExp)) +
+      geom_histogram(bins=10, fill="blue") +
+      ggtitle("Life Expectancy") +
+      xlab("Years") +
+      ylab("Number of People") 
+
+```
+
+#Exercise 2:
+
+Draw a scatter plot of life expectancy by year using only Spain. (Here, you’ll need to use dplyr’s filter command).
+```{r, eval=FALSE}
+lifeexp_by_year_spain <- data %>%
+  group_by(year) %>% 
+  filter(country =="Spain") %>%
+  summarise(avg_life = mean(lifeExp))
+  
+
+ggplot(lifeexp_by_year, aes(x=year, y=avg_life)) +
+  geom_point() 
+
+
+```
+
+
+#Exercise 3:
+
+Let’s make the same scatter plot but for multiple countries and using gdpPercap. Again, you’ll use the filter command. Let’s say we want to use Mexico, Canada and Iran. We can use the %in% operator to find which elements belong to a given list.
+```{r, eval=FALSE}
+
+dgpdata <- data %>%
+  group_by(country) %>% 
+  select(gdpPercap, year) %>% 
+  filter(country %in% c('Canada','Iran', 'Mexico')) 
+
+
+ggplot(dgpdata, aes(x=year, y=gdpPercap, color=country)) +
+  geom_point()+
+  geom_line() +
+  ggtitle("GDP in Canada, Iran and Mexico") +
+      xlab("Years") +
+      ylab("GDP") 
+
+```
+
+

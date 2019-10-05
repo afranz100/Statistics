@@ -1,0 +1,93 @@
+---
+title: "Assignment 2"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#1) Write a script that computes the mean of each column in a matrix (without using the function mean), and compare your result with colMeans.
+
+```{r, eval=FALSE}
+my_matrix <- matrix(data=seq(from=1, to=100), nrow=20, ncol=5)
+
+columns <- my_matrix[,c(1:5)]
+
+column_1 <- my_matrix[,1]
+column_2 <- my_matrix[,2]
+column_3 <- my_matrix[,3]
+column_4 <- my_matrix[,4]
+column_5 <- my_matrix[,5]
+
+```
+
+-Mean function 
+```{r, eval=FALSE}
+my_fun <-function(x_mean){ 
+  sum(x_mean)/length(x_mean)} 
+
+  print(my_fun(x_mean))
+
+```
+
+
+#2) Using the babynames dataset, do the following (and you are free to use any function now):
+```{r, eval=FALSE}
+install.packages("babynames")
+library(babynames)
+
+```
+
+#2a) How many records (i.e., rows) we have for female baby names in 1950?
+```{r, eval=FALSE}
+female_names_1950 <- babynames[babynames$year == 1950 & babynames$sex == "F", ]
+
+nrow(female_names_1950)
+
+
+```
+
+#2b) What is the most popular male name in 2010? What about the female name?
+```{r, eval=FALSE}
+
+male_names_2010 <- babynames[babynames$year == 2010 & babynames$sex == "M",]
+most_popular_male_name_2010 <- male_names_2010[1,]
+
+
+female_names_2010 <- babynames[babynames$year == 2010 & babynames$sex == "F",]
+
+most_popular_female_name_2010 <- female_names_2010[1,]
+
+```
+
+#2c) Extract the frequency of the name “Mohammed” across all years and then use plot function. 
+
+```{r, eval=FALSE}
+
+result_Mohammed_n <- babynames$n[babynames$name=='Mohammed'] 
+result_Mohammed_year <- babynames$year[babynames$name=='Mohammed']
+
+plot(result_Mohammed_year, result_Mohammed_n, type='l')
+ 
+```
+
+
+#2d) What about other names? Just type as many names as you can until you see names that have interesting trends. When you see something interesting, just use it in your final solution and tell me why you think it is interesting (probaby in blackboard when you submit the assignment)
+
+```{r, eval=FALSE}
+
+result_Britney_n <- babynames$n[babynames$name=='Britney'] 
+result_Britney_year <- babynames$year[babynames$name=='Britney']
+
+plot(result_Britney_year, result_Britney_n, type='l')
+
+
+```

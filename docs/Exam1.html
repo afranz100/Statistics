@@ -11,7 +11,7 @@
 
 
 
-<title></title>
+<title>Exam 1</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,6 +19,9 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -264,6 +267,101 @@ $(document).ready(function () {
 
 
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -308,54 +406,102 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Exam 1</h1>
 
 </div>
 
 
-<div id="labjournalwebsite" class="section level1">
-<h1>LabJournalWebsite</h1>
-<p>An R Markdown website template for a lab journal <a href="https://crumplab.github.io/LabJournalWebsite/index.html" class="uri">https://crumplab.github.io/LabJournalWebsite/index.html</a></p>
-<p>To use this, click the download as .zip button to start from a local computer, or skip down to the github example to fork this and get started that way.</p>
-<p>The unzipped folder contains all of the files you need to compile a website in R Markdown. This should all work fine if you have the latest version of R and R-studio installed.</p>
-<div id="steps-for-compiling-on-your-local-computer" class="section level2">
-<h2>Steps for compiling on your local computer</h2>
-<ol style="list-style-type: decimal">
-<li>Make sure R and R-studio are installed</li>
-<li>Make sure the rmarkdown package is installed in R-studio. Open R-studio, click the packages tab in the lower left hand corner, click install packages, type in rmarkdown, make sure “install dependencies” is clicked on, then press install. Close R-studio.</li>
-<li>Navigate to the folder you just downloaded, open the ‘LabJournalWebsite.Proj’ file. This should automatically open R-studio, and your current working environment will be inside this project. That means everything you save will be auto saved to this folder (unless you tell R-studio to save something somewhere else.</li>
-<li>Inside R-studio you should see a files tab in the bottom right hand corner. Most files you click will be opened up as text files in the R-studio editor. Click the “Index.Rmd” file.</li>
-<li>To compile the entire website, find the build tab in the top right hand corner. You should see the option to “build website”. Click this. The website should be built.</li>
-<li>After the website is built, you should be able to see it in the R-studio browser. There is a little button (blue arrow with a little browser icon) that allows you to pop the website into your default web-browser. This way you can look at the website in your browser.</li>
-</ol>
-<p>Important: After compilation, all of the files for displaying your website are saved in the folder where your R project resides. When you look at these in a browser (for example, by going to the folder and dragging the index.html file into a browser), you are loading from your disk. Only you will be able to see the website, because it is on your hard-drive. You need to upload to a web server to serve the webpage on the internet.</p>
+<div id="write-a-command-that-tells-us-many-days-where-5-customers-have-waited-one-line." class="section level1">
+<h1>1) Write a command that tells us many days where 5 customers have waited (one line).</h1>
+<pre class="r"><code>waiting_customers &lt;- c(4,2,1,1,0,2,1,2,4,2,5,3,1,5,1,5,1,2,1,1,3,4,2,4,3)
+
+
+table(waiting_customers)[6]</code></pre>
 </div>
-<div id="steps-for-serving-your-webpage-using-github-pages." class="section level2">
-<h2>Steps for serving your webpage using github pages.</h2>
-<p>This is the source code repository for making the webpage in R-studio. At the same time, the resulting website is being served from this repository at this link <a href="https://crumplab.github.io/LabJournalWebsite/index.html" class="uri">https://crumplab.github.io/LabJournalWebsite/index.html</a>.</p>
-<p>Every github repository has the capability of serving html files (web page files) contained in the repository, this is called github pages. How this works depends a little bit on the specific repository you are using. For this repository. The webpage is served from the docs folder. The example files are set so that when you compile the example in R-studio, the output automatically goes into the docs folder. As a result, when you have these files in a github repository, github will serve the html files in your docs folder as a website.</p>
-<p><strong>Steps</strong></p>
-<ol style="list-style-type: decimal">
-<li>For this repo to your github (press the fork button in top right hand corner, then choose your github account)</li>
-<li>You should now see a copy of this repo in your github account</li>
-<li>Click the Settings (also near top right), scroll down to Github Pages options</li>
-<li>click the optino to serve from docs folder</li>
-<li>You should see a little green message above the github pages options with a link to your new webpage.</li>
-</ol>
-<p><strong>Editing webpage and serving on github</strong></p>
-<ol style="list-style-type: decimal">
-<li>download <a href="https://desktop.github.com">github desktop</a></li>
-<li>make sure it is connected to your account</li>
-<li>clone the website repo to your local computer</li>
-<li>Open up the project file in the folder for your repo on your local computer (.rproj file)</li>
-<li>Edit the .rmd files in R-studio</li>
-<li>Recompile website (build website when index.rmd is loaded), or knit individual .rmd files</li>
-<li>send your changes back to the online github repository (note this can be done in github desktop, or directly in R-studio, in R-studio you will see a git tab if you are working in a git repo. Click the git tab, click the diff button, which will show you if there are any new changes. Click each of the files that you want to commit. Write a short note to describe the changes. Press the commit button. Wait a couple seconds, your changes should now be served on your website).</li>
-</ol>
+<div id="write-a-command-that-tells-us-the-maximum-of-those-numbers" class="section level1">
+<h1>2) Write a command that tells us the maximum of those numbers</h1>
+<pre class="r"><code>max(waiting_customers)</code></pre>
 </div>
+<div id="write-a-command-that-tells-us-the-mean-of-those-numbers" class="section level1">
+<h1>3) Write a command that tells us the mean of those numbers</h1>
+<pre class="r"><code>mean(waiting_customers)</code></pre>
+</div>
+<div id="write-a-command-that-prints-the-standard-deviation-of-those-numbers." class="section level1">
+<h1>4) Write a command that prints the standard deviation of those numbers.</h1>
+<pre class="r"><code>sd(waiting_customers)</code></pre>
+</div>
+<div id="using-the-following-matrix" class="section level1">
+<h1>5) Using the following matrix:</h1>
+<pre class="r"><code>numbers &lt;- seq(from=1, to=100,by=2)
+
+numbers_matrix &lt;- matrix(numbers, nrow=5, ncol=10)</code></pre>
+<p>Write the command that tells us the dimensions of this matrix (number of rows, number of columns).</p>
+<pre class="r"><code>dim(numbers_matrix)</code></pre>
+</div>
+<div id="using-the-following-matrix-1" class="section level1">
+<h1>6) Using the following matrix:</h1>
+<pre class="r"><code>numbers &lt;- seq(from=1, to=100,by=2)
+numbers_matrix &lt;- matrix(numbers, nrow=5, ncol=10)</code></pre>
+</div>
+<div id="write-the-command-that-calculates-the-mean-of-each-column-without-using-the-mean-function-i.e.-use-a-for-loop" class="section level1">
+<h1>7) Write the command that calculates the mean of each column, without using the <code>mean</code> function (i.e., use a for-loop)</h1>
+<pre class="r"><code>mean_function &lt;-function(x_mean){ 
+  sum(x_mean)/length(x_mean)} 
+
+  print(mean_function(x_mean))
+  
+  
+column_1 &lt;- numbers_matrix[,1]
+mean_function(column_1)
+column_2 &lt;- numbers_matrix[,2]
+mean_function(column_2)
+column_3 &lt;- numbers_matrix[,3]
+mean_function(column_3)
+column_4 &lt;- numbers_matrix[,4]
+mean_function(column_4)
+column_5 &lt;- numbers_matrix[,5]
+mean_function(column_5)
+column_6 &lt;- numbers_matrix[,6]
+mean_function(column_6)
+column_7 &lt;- numbers_matrix[,7]
+mean_function(column_7)
+column_8 &lt;- numbers_matrix[,8]
+mean_function(column_8)
+column_9 &lt;- numbers_matrix[,9]
+mean_function(column_9)
+column_10 &lt;- numbers_matrix[,10]
+mean_function(column_10)</code></pre>
+</div>
+<div id="write-the-command-that-calculates-the-sum-of-each-column-without-using-the-sum-function-i.e.-use-a-for-loop" class="section level1">
+<h1>8) Write the command that calculates the sum of each column, without using the <code>sum</code> function (i.e., use a for-loop)</h1>
+<pre class="r"><code>numbers &lt;- seq(from=1, to=100,by=2)
+numbers_matrix &lt;- matrix(numbers, nrow=5, ncol=10)
+
+j &lt;- 0
+for (numbers in numbers_matrix){
+j &lt;- numbers + numbers
+}
+print(j)</code></pre>
+</div>
+<div id="write-the-command-that-calculates-the-sum-of-each-column-without-using-the-sum-function-i.e.-use-a-for-loop-1" class="section level1">
+<h1>9) Write the command that calculates the sum of each column, without using the <code>sum</code> function (i.e., use a for-loop)</h1>
+<pre class="r"><code>numbers &lt;- seq(from=1, to=100,by=2)
+numbers_matrix &lt;- matrix(numbers, nrow=5, ncol=10)
+
+total_sum &lt;- 0
+for (x in numbers_matrix) {
+  total_sum &lt;- numbers_matrix[x,] + numbers_matrix[x+c(1:4),] 
+}
+print(total_sum)</code></pre>
+<pre class="r"><code>Linda_over_years &lt;- babynames[babynames$name == &quot;Linda&quot; &amp; babynames$sex == &quot;F&quot;,]
+Max_Linda_over_years &lt;- babynames[babynames$name == &quot;Linda&quot; &amp; babynames$sex == &quot;F&quot; &amp; babynames$n == max(Linda_over_years$n),]
+Max_Linda_over_years$year</code></pre>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 

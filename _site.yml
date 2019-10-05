@@ -6,6 +6,12 @@ navbar:
       href: index.html
     - text: "Class Notes"
       href: ClassNotes.html
-    - text: "Links"
-      href: Links.html
+    - text: "Assignment 1"
+      href: Assignment1.html
+    - text: "Assignment 2"
+      href: Assignment2.html
+    - text: "Assignment 3"
+      href: Assignment3.html
+    - text: "Exam 1"
+      href: Exam1.html
 output_dir: "docs"

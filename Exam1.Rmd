@@ -1,0 +1,137 @@
+---
+title: "Exam 1"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#1) Write a command that tells us many days where 5 customers have waited (one line).
+
+```{r, eval=FALSE}
+waiting_customers <- c(4,2,1,1,0,2,1,2,4,2,5,3,1,5,1,5,1,2,1,1,3,4,2,4,3)
+
+
+table(waiting_customers)[6]
+
+
+```
+
+#2) Write a command that tells us the maximum of those numbers
+```{r, eval=FALSE}
+max(waiting_customers)
+```
+
+
+#3) Write a command that tells us the mean of those numbers
+```{r, eval=FALSE}
+mean(waiting_customers)
+```
+
+#4)  Write a command that prints the standard deviation of those numbers.
+```{r, eval=FALSE}
+sd(waiting_customers)
+```
+
+#5) Using the following matrix:
+```{r, eval=FALSE}
+numbers <- seq(from=1, to=100,by=2)
+
+numbers_matrix <- matrix(numbers, nrow=5, ncol=10)
+```
+
+Write the command that tells us the dimensions of this matrix (number of rows, number of columns).
+
+```{r, eval=FALSE}
+
+dim(numbers_matrix)
+
+```
+
+#6) Using the following matrix:
+
+```{r, eval=FALSE}
+numbers <- seq(from=1, to=100,by=2)
+numbers_matrix <- matrix(numbers, nrow=5, ncol=10)
+```
+
+#7) Write the command that calculates the mean of each column, without using the `mean` function (i.e., use a for-loop)
+
+```{r, eval=FALSE}
+mean_function <-function(x_mean){ 
+  sum(x_mean)/length(x_mean)} 
+
+  print(mean_function(x_mean))
+  
+  
+column_1 <- numbers_matrix[,1]
+mean_function(column_1)
+column_2 <- numbers_matrix[,2]
+mean_function(column_2)
+column_3 <- numbers_matrix[,3]
+mean_function(column_3)
+column_4 <- numbers_matrix[,4]
+mean_function(column_4)
+column_5 <- numbers_matrix[,5]
+mean_function(column_5)
+column_6 <- numbers_matrix[,6]
+mean_function(column_6)
+column_7 <- numbers_matrix[,7]
+mean_function(column_7)
+column_8 <- numbers_matrix[,8]
+mean_function(column_8)
+column_9 <- numbers_matrix[,9]
+mean_function(column_9)
+column_10 <- numbers_matrix[,10]
+mean_function(column_10)
+
+
+```
+
+
+#8) Write the command that calculates the sum of each column, without using the `sum` function (i.e., use a for-loop)
+
+```{r, eval=FALSE}
+numbers <- seq(from=1, to=100,by=2)
+numbers_matrix <- matrix(numbers, nrow=5, ncol=10)
+
+j <- 0
+for (numbers in numbers_matrix){
+j <- numbers + numbers
+}
+print(j)
+
+
+```
+
+
+#9) Write the command that calculates the sum of each column, without using the `sum` function (i.e., use a for-loop)
+
+```{r, eval=FALSE}
+
+numbers <- seq(from=1, to=100,by=2)
+numbers_matrix <- matrix(numbers, nrow=5, ncol=10)
+
+total_sum <- 0
+for (x in numbers_matrix) {
+  total_sum <- numbers_matrix[x,] + numbers_matrix[x+c(1:4),] 
+}
+print(total_sum)
+```
+
+```{r, eval=FALSE}
+Linda_over_years <- babynames[babynames$name == "Linda" & babynames$sex == "F",]
+Max_Linda_over_years <- babynames[babynames$name == "Linda" & babynames$sex == "F" & babynames$n == max(Linda_over_years$n),]
+Max_Linda_over_years$year
+```
+
+
+
