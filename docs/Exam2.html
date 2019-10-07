@@ -439,7 +439,7 @@ ggplot(data=flights, aes(x=air_time))+
 
 
 ggplot(canceled, aes(x=day, y=count_canceled))+
-  geom_line()</code></pre>
+  geom_bar(stat = &quot;identity&quot;)</code></pre>
 </div>
 <div id="which-destinations-have-more-canceled-flights-make-a-list-of-the-worst-10-destinations-and-the-best-10-destinations-in-terms-of-the-number-of-canceled-flights." class="section level1">
 <h1>3) Which destinations have more canceled flights? Make a list of the worst 10 destinations and the best 10 destinations in terms of the number of canceled flights.</h1>
@@ -449,7 +449,6 @@ ggplot(canceled, aes(x=day, y=count_canceled))+
   arrange(desc(count_canceled)) %&gt;%
   mutate(count=1:length(dest)) %&gt;%
   filter(count &lt;= 10)
-  
 
 best_dest &lt;- flights %&gt;%
   group_by(dest) %&gt;%
@@ -497,6 +496,49 @@ ggplot(carrier_delays, aes(x=carrier, y=av_delay))+
 </div>
 <div id="what-time-of-day-should-you-fly-if-you-want-to-avoid-delays-as-much-as-possible-you-should-make-a-barplot-or-a-line-point-with-the-time-of-the-day-on-the-x-axis-and-the-average-delays-on-the-y-axis." class="section level1">
 <h1>7) What time of day should you fly if you want to avoid delays as much as possible? You should make a barplot (or a line point) with the time of the day on the x-axis and the average delays on the y-axis.</h1>
+<pre class="r"><code>daydelay &lt;- flights %&gt;%
+  select(day,dep_time,dep_delay) %&gt;%
+  group_by(dep_time) %&gt;%
+  summarize(mean_delay=mean(dep_delay, na.rm=TRUE)) %&gt;%
+  mutate(time=dep_time/100, delay_time= mean_delay/100) 
+  
+
+ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
+  geom_line()+
+  ggtitle(&quot;Average Delays in One Day&quot;) +
+      xlab(&quot;Time of Day (in military time)&quot;) +
+      ylab(&quot;Average Delay&quot;) </code></pre>
+</div>
+<div id="if-you-want-to-go-to-chicago-code-ord-what-nyc-airport-and-which-carrier-you-should-consider-so-that-you-have-the-minimum-delay-possible" class="section level1">
+<h1>8) If you want to go to Chicago (code: <code>ORD</code>), what NYC airport and which carrier you should consider so that you have the minimum delay possible?</h1>
+<pre class="r"><code>chicagoflights &lt;- flights %&gt;%
+  select(origin, dest, dep_delay) %&gt;%
+  filter(dest==&quot;ORD&quot;) %&gt;%
+  group_by(origin) %&gt;%
+  summarize(av_delay=mean(dep_delay, na.rm=TRUE))</code></pre>
+</div>
+<div id="what-are-the-furthest-destinations-and-how-long-does-it-take-to-get-there-make-a-list-of-10-furthest-destinations-along-with-the-flight-duration-in-hours" class="section level1">
+<h1>9) What are the furthest destinations and how long does it take to get there? (make a list of 10 furthest destinations along with the flight duration in hours)</h1>
+<pre class="r"><code>furthestdest &lt;- flights %&gt;%
+  select(distance, air_time, dest) %&gt;%
+  group_by(dest) %&gt;%
+  summarize(av_distance=mean(distance)) %&gt;%
+  arrange(desc(av_distance)) %&gt;%
+  mutate(Top_10=1:length(av_distance)) %&gt;%
+  filter(Top_10 &lt;= 10)</code></pre>
+</div>
+<div id="what-are-the-most-common-destinations-from-nyc-airports-i.e.-destinations-that-have-highest-number-of-flights-make-a-list-of-10." class="section level1">
+<h1>10) What are the most common destinations from NYC airports (i.e., destinations that have highest number of flights)? Make a list of 10.</h1>
+<pre class="r"><code>most_common_dest &lt;- flights %&gt;%
+  select(dest) %&gt;%
+  
+  
+  
+ggplot(most_common_dest, aes(x=dest)) +
+  geom_histogram(bin=20)</code></pre>
+</div>
+<div id="which-nyc-airport-and-which-carrier-has-more-long-flights-can-you-guess-from-this-list-which-carriers-have-lots-of-international-flights-group_by-both-nyc-airports-and-carrier." class="section level1">
+<h1>11) Which NYC airport and which carrier has more long flights? Can you guess from this list which carriers have lots of international flights? (group_by both NYC airports and carrier).</h1>
 </div>
 
 

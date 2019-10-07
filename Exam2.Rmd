@@ -51,7 +51,7 @@ canceled <- flights %>%
 
 
 ggplot(canceled, aes(x=day, y=count_canceled))+
-  geom_line()
+  geom_bar(stat = "identity")
 
 ```
 
@@ -65,7 +65,6 @@ worst_dest <- flights %>%
   arrange(desc(count_canceled)) %>%
   mutate(count=1:length(dest)) %>%
   filter(count <= 10)
-  
 
 best_dest <- flights %>%
   group_by(dest) %>%
@@ -106,8 +105,7 @@ fast_flights <- flights %>%
   mutate(count=1:length(dest)) %>%
   filter(count <= 10) %>%
   select(dest, speed)
-  
-  
+ 
 ```
 
 
@@ -130,8 +128,64 @@ ggplot(carrier_delays, aes(x=carrier, y=av_delay))+
 
 
 #7) What time of day should you fly if you want to avoid delays as much as possible? You should make a barplot (or a line point) with the time of the day on the x-axis and the average delays on the y-axis.
+```{r, eval=FALSE}
 
-```{r}
+daydelay <- flights %>%
+  select(day,dep_time,dep_delay) %>%
+  group_by(dep_time) %>%
+  summarize(mean_delay=mean(dep_delay, na.rm=TRUE)) %>%
+  mutate(time=dep_time/100, delay_time= mean_delay/100) 
+  
+
+ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
+  geom_line()+
+  ggtitle("Average Delays in One Day") +
+      xlab("Time of Day (in military time)") +
+      ylab("Average Delay") 
+
+```
+
+
+#8) If you want to go to Chicago (code: `ORD`), what NYC airport and which carrier you should consider so that you have the minimum delay possible?
+```{r, eval=FALSE}
+
+chicagoflights <- flights %>%
+  select(origin, dest, dep_delay) %>%
+  filter(dest=="ORD") %>%
+  group_by(origin) %>%
+  summarize(av_delay=mean(dep_delay, na.rm=TRUE))
+
+
+```
+
+#9) What are the furthest destinations and how long does it take to get there? (make a list of 10 furthest destinations along with the flight duration in hours)
+```{r, eval=FALSE}
+
+furthestdest <- flights %>%
+  select(distance, air_time, dest) %>%
+  group_by(dest) %>%
+  summarize(av_distance=mean(distance)) %>%
+  arrange(desc(av_distance)) %>%
+  mutate(Top_10=1:length(av_distance)) %>%
+  filter(Top_10 <= 10)
+  
+
+```
+
+#10) What are the most common destinations from NYC airports (i.e., destinations that have highest number of flights)? Make a list of 10.
+```{r, eval=FALSE}
+most_common_dest <- flights %>%
+  select(dest) %>%
+  
+  
+  
+ggplot(most_common_dest, aes(x=dest)) +
+  geom_histogram(bin=20)
+
+```
+
+#11) Which NYC airport and which carrier has more long flights? Can you guess from this list which carriers have lots of international flights? (group_by both NYC airports and carrier).
+```{r, eval=FALSE}
 
 ```
 

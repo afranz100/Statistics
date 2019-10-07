@@ -1,0 +1,94 @@
+---
+title: "Assignment 2"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#Find all flights that:
+```{r}
+library(dplyr)
+library(ggplot2)
+install.packages('nycflights13')
+library(nycflights13)
+```
+
+##Had an arrival delay of two or more hours
+```{r}
+
+twohr_delay <- flights %>%
+  select(flight, dep_delay) %>%
+  filter(dep_delay >= 120)
+
+```
+
+
+##Flew to Dallas (DAL or DFW)
+```{r}
+Dallasflights <- flights %>%
+  select(flight, dest) %>%
+  filter(dest == "DFW")
+```
+
+##Were operated by United (UA), American (AA), or Delta (DL) 
+```{r}
+carriertype <- flights %>%
+  select(carrier, flight) %>%
+  filter(carrier == "UA" | carrier == "AA" | carrier =="DL")
+```
+
+##Departed in summer (July, August, and September)
+```{r}
+summerflights <- flights %>%
+  select(month, flight) %>%
+  filter(month==7:9)
+```
+
+##Arrived more than two hours late, but didn’t leave late
+```{r}
+latefights <- flights %>%
+  select(flight, dep_delay, arr_delay) %>%
+  filter(dep_delay==0 & arr_delay > 120)
+```
+
+##Were delayed by at least an hour, but arrival delay is less than 30 minutes.
+```{r}
+delayedflights <- flights %>%
+  select(flight, dep_delay, arr_delay) %>%
+  filter(dep_delay >=60 & arr_delay < 30)
+
+```
+
+##Departed before 6am (remember to check the time)
+```{r}
+earlyflights <- flights %>%
+  select(flight, dep_time) %>%
+  filter(dep_time < 600)
+```
+
+
+#Is there a relationship between proportion of cancelled flights and the average delays? Remember that a missing dep_delay or arr_delay (i.e., is.na() is TRUE) represents a cancelled flight. Make a scatter plot that have the proportion of cancelled flights on the x-axis, and the average delay on the y-axis. Group the observations by month. Also make sure you plot straight line using geom_smooth(method='lm').
+```{r}
+
+
+canceled <- flights %>% 
+  group_by(month) %>%
+  summarize(count_canceled=sum(is.na(dep_delay)), 
+            av_delay = mean(dep_delay, na.rm = TRUE))
+  
+ggplot(canceled, aes(x=count_canceled, y=av_delay))+
+  geom_point(aes(color=month))+
+  geom_smooth(method='lm')
+
+
+```
+
