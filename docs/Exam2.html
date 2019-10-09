@@ -471,8 +471,7 @@ best_dest &lt;- flights %&gt;%
   filter(!is.na(dep_delay)) %&gt;%
   summarize(av_delay=mean(dep_delay)) %&gt;%
   arrange(desc(av_delay)) %&gt;%
-  mutate(count=1:length(dest)) %&gt;%
-  filter(count &lt;= 10)
+  top_n(10)
 
 ggplot(high_delay, aes(x=dest, y=av_delay)) +
   geom_bar(stat = &quot;identity&quot;)</code></pre>
@@ -482,9 +481,7 @@ ggplot(high_delay, aes(x=dest, y=av_delay)) +
 <pre class="r"><code>fast_flights &lt;- flights %&gt;%
   mutate(speed=distance/air_time*60) %&gt;%
   arrange(desc(speed)) %&gt;%
-  mutate(count=1:length(dest)) %&gt;%
-  filter(count &lt;= 10) %&gt;%
-  select(dest, speed, flight)</code></pre>
+  select(dest, flight, speed) </code></pre>
 </div>
 <div id="which-carrier-has-the-worst-delays-since-we-have-16-unique-carriers-make-a-barplot-of-the-16-carriers-along-with-their-average-delays.-use-a-different-color-for-each-bar." class="section level1">
 <h1>6) Which carrier has the worst delays? Since we have 16 unique carriers, make a barplot of the 16 carriers along with their average delays. Use a different color for each bar.</h1>
@@ -492,8 +489,7 @@ ggplot(high_delay, aes(x=dest, y=av_delay)) +
   group_by(carrier) %&gt;%
   filter(!is.na(dep_delay)) %&gt;%
   summarize(av_delay=mean(dep_delay)) %&gt;%
-  arrange(desc(av_delay)) %&gt;%
-  mutate(Longest_Delays_Ranked=1:length(carrier))
+  arrange(desc(av_delay))
 
 ggplot(carrier_delays, aes(x=carrier, y=av_delay))+
   geom_bar(stat = &quot;identity&quot;, aes(fill=carrier))</code></pre>
@@ -504,29 +500,31 @@ ggplot(carrier_delays, aes(x=carrier, y=av_delay))+
   select(day,dep_time,dep_delay) %&gt;%
   group_by(dep_time) %&gt;%
   summarize(mean_delay=mean(dep_delay, na.rm=TRUE)) %&gt;%
-  mutate(time=dep_time/100, delay_time= mean_delay/100) 
+  mutate(time=dep_time/100, delay_time= mean_delay/60) 
   
 
-ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
+ggplot(daydelay, aes(x=dep_time, y=delay_time))+
   geom_line()+
   ggtitle(&quot;Average Delays in One Day&quot;) +
       xlab(&quot;Time of Day (in military time)&quot;) +
-      ylab(&quot;Average Delay&quot;) </code></pre>
+      ylab(&quot;Average Delay (in hours)&quot;) </code></pre>
 </div>
 <div id="if-you-want-to-go-to-chicago-code-ord-what-nyc-airport-and-which-carrier-you-should-consider-so-that-you-have-the-minimum-delay-possible" class="section level1">
 <h1>8) If you want to go to Chicago (code: <code>ORD</code>), what NYC airport and which carrier you should consider so that you have the minimum delay possible?</h1>
 <pre class="r"><code>chicagoflights &lt;- flights %&gt;%
-  select(origin, dest, dep_delay) %&gt;%
+  select(origin, dest, dep_delay, carrier) %&gt;%
   filter(dest==&quot;ORD&quot;) %&gt;%
-  group_by(origin) %&gt;%
-  summarize(av_delay=mean(dep_delay, na.rm=TRUE))</code></pre>
+  group_by(origin, carrier) %&gt;%
+  summarize(av_delay=mean(dep_delay, na.rm=TRUE)) %&gt;%
+  arrange(av_delay) </code></pre>
 </div>
 <div id="what-are-the-furthest-destinations-and-how-long-does-it-take-to-get-there-make-a-list-of-10-furthest-destinations-along-with-the-flight-duration-in-hours" class="section level1">
 <h1>9) What are the furthest destinations and how long does it take to get there? (make a list of 10 furthest destinations along with the flight duration in hours)</h1>
 <pre class="r"><code>furthestdest &lt;- flights %&gt;%
   select(distance, air_time, dest) %&gt;%
   group_by(dest) %&gt;%
-  summarize(av_distance=mean(distance)) %&gt;%
+  summarize(av_distance=mean(distance),
+            travel_time=mean(air_time/60, na.rm=TRUE)) %&gt;%
   arrange(desc(av_distance)) %&gt;%
   top_n(10)</code></pre>
 </div>
@@ -540,6 +538,20 @@ ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
 </div>
 <div id="which-nyc-airport-and-which-carrier-has-more-long-flights-can-you-guess-from-this-list-which-carriers-have-lots-of-international-flights-group_by-both-nyc-airports-and-carrier." class="section level1">
 <h1>11) Which NYC airport and which carrier has more long flights? Can you guess from this list which carriers have lots of international flights? (group_by both NYC airports and carrier).</h1>
+<pre class="r"><code>longflightsairport &lt;- flights %&gt;%
+  select(air_time, origin) %&gt;%
+  filter(!is.na(air_time)) %&gt;% 
+  group_by(origin) %&gt;%
+  summarize(av_airtime=mean(air_time/60)) %&gt;%
+  arrange(desc(av_airtime)) 
+
+
+longflightscarrier &lt;- flights %&gt;%
+  select(air_time, carrier) %&gt;%
+  filter(!is.na(air_time)) %&gt;% 
+  group_by(carrier) %&gt;%
+  summarize(av_airtime=mean(air_time/60)) %&gt;%
+  arrange(desc(av_airtime))</code></pre>
 </div>
 
 
