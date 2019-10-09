@@ -392,6 +392,9 @@ div.tocify {
   <a href="Assignment3.html">Assignment 3</a>
 </li>
 <li>
+  <a href="Assignment4.html">Assignment 4</a>
+</li>
+<li>
   <a href="Exam1.html">Exam 1</a>
 </li>
 <li>
@@ -447,6 +450,8 @@ ggplot(canceled, aes(x=day, y=count_canceled))+
   group_by(dest) %&gt;%
   summarize(count_canceled=sum(is.na(dep_delay))) %&gt;%
   arrange(desc(count_canceled)) %&gt;%
+  top_n(10)
+
   mutate(count=1:length(dest)) %&gt;%
   filter(count &lt;= 10)
 
@@ -454,6 +459,8 @@ best_dest &lt;- flights %&gt;%
   group_by(dest) %&gt;%
   summarize(count_canceled=sum(is.na(dep_delay))) %&gt;%
   arrange(count_canceled) %&gt;%
+  top_n(-10)
+
   mutate(count=1:length(dest)) %&gt;%
   filter(count &lt;= 10)</code></pre>
 </div>
@@ -472,15 +479,12 @@ ggplot(high_delay, aes(x=dest, y=av_delay)) +
 </div>
 <div id="which-flights-are-the-fastest-flights-to-get-that-you-need-to-calculate-speed.-speed-is-distance-divided-by-air_time60-so-you-get-a-value-in-mph" class="section level1">
 <h1>5) Which flights are the fastest flights? (to get that, you need to calculate speed. Speed is distance divided by air_time*60 so you get a value in mph)</h1>
-<pre class="r"><code>flightdata &lt;- flights
-
-
-fast_flights &lt;- flights %&gt;%
+<pre class="r"><code>fast_flights &lt;- flights %&gt;%
   mutate(speed=distance/air_time*60) %&gt;%
   arrange(desc(speed)) %&gt;%
   mutate(count=1:length(dest)) %&gt;%
   filter(count &lt;= 10) %&gt;%
-  select(dest, speed)</code></pre>
+  select(dest, speed, flight)</code></pre>
 </div>
 <div id="which-carrier-has-the-worst-delays-since-we-have-16-unique-carriers-make-a-barplot-of-the-16-carriers-along-with-their-average-delays.-use-a-different-color-for-each-bar." class="section level1">
 <h1>6) Which carrier has the worst delays? Since we have 16 unique carriers, make a barplot of the 16 carriers along with their average delays. Use a different color for each bar.</h1>
@@ -524,18 +528,15 @@ ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
   group_by(dest) %&gt;%
   summarize(av_distance=mean(distance)) %&gt;%
   arrange(desc(av_distance)) %&gt;%
-  mutate(Top_10=1:length(av_distance)) %&gt;%
-  filter(Top_10 &lt;= 10)</code></pre>
+  top_n(10)</code></pre>
 </div>
 <div id="what-are-the-most-common-destinations-from-nyc-airports-i.e.-destinations-that-have-highest-number-of-flights-make-a-list-of-10." class="section level1">
 <h1>10) What are the most common destinations from NYC airports (i.e., destinations that have highest number of flights)? Make a list of 10.</h1>
 <pre class="r"><code>most_common_dest &lt;- flights %&gt;%
-  select(dest) %&gt;%
-  
-  
-  
-ggplot(most_common_dest, aes(x=dest)) +
-  geom_histogram(bin=20)</code></pre>
+  group_by(dest) %&gt;%
+  tally() %&gt;%
+  arrange(desc(n)) %&gt;%
+  top_n(10)</code></pre>
 </div>
 <div id="which-nyc-airport-and-which-carrier-has-more-long-flights-can-you-guess-from-this-list-which-carriers-have-lots-of-international-flights-group_by-both-nyc-airports-and-carrier." class="section level1">
 <h1>11) Which NYC airport and which carrier has more long flights? Can you guess from this list which carriers have lots of international flights? (group_by both NYC airports and carrier).</h1>

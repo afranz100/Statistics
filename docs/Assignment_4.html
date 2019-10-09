@@ -417,54 +417,66 @@ div.tocify {
 </div>
 
 
-<div id="exercise-1" class="section level1">
-<h1>Exercise 1:</h1>
-<p>How long are people living? Make a histogram using geom_histogram layer. Experiment with bins and colors (i.e., geom_histogram(bins=20, color=”black”).</p>
-<pre class="r"><code>install.packages(&#39;gapminder&#39;) #gapminder is a useful dataset
-install.packages(&#39;ggplot2&#39;)
-library(gapminder)
+<pre class="r"><code>library(dplyr)
 library(ggplot2)
-library(dplyr)</code></pre>
-<pre class="r"><code>data &lt;- gapminder
-
-lifeexp_by_year &lt;- data %&gt;%
-  group_by(year) %&gt;% 
-  summarise(avg_life = mean(lifeExp))
-
-
-ggplot(data, aes(x=lifeExp)) +
-      geom_histogram(bins=10, fill=&quot;blue&quot;) +
-      ggtitle(&quot;Life Expectancy&quot;) +
-      xlab(&quot;Years&quot;) +
-      ylab(&quot;Number of People&quot;) </code></pre>
+install.packages(&#39;nycflights13&#39;)
+library(nycflights13)</code></pre>
+<div id="find-all-flights-that" class="section level1">
+<h1>Find all flights that:</h1>
+<div id="had-an-arrival-delay-of-two-or-more-hours" class="section level2">
+<h2>Had an arrival delay of two or more hours</h2>
+<pre class="r"><code>twohr_delay &lt;- flights %&gt;%
+  select(flight, dep_delay) %&gt;%
+  filter(dep_delay &gt;= 120)</code></pre>
 </div>
-<div id="exercise-2" class="section level1">
-<h1>Exercise 2:</h1>
-<p>Draw a scatter plot of life expectancy by year using only Spain. (Here, you’ll need to use dplyr’s filter command).</p>
-<pre class="r"><code>lifeexp_by_year_spain &lt;- data %&gt;%
-  group_by(year) %&gt;% 
-  filter(country ==&quot;Spain&quot;) %&gt;%
-  summarise(avg_life = mean(lifeExp))
+<div id="flew-to-dallas-dal-or-dfw" class="section level2">
+<h2>Flew to Dallas (DAL or DFW)</h2>
+<pre class="r"><code>dallasflights &lt;- flights %&gt;%
+  select(flight, dest) %&gt;%
+  filter(dest == &quot;DFW&quot;)</code></pre>
+</div>
+<div id="were-operated-by-united-ua-american-aa-or-delta-dl" class="section level2">
+<h2>Were operated by United (UA), American (AA), or Delta (DL)</h2>
+<pre class="r"><code>carriertype &lt;- flights %&gt;%
+  select(carrier, flight) %&gt;%
+  filter(carrier == &quot;UA&quot; | carrier == &quot;AA&quot; | carrier ==&quot;DL&quot;)</code></pre>
+</div>
+<div id="departed-in-summer-july-august-and-september" class="section level2">
+<h2>Departed in summer (July, August, and September)</h2>
+<pre class="r"><code>summerflights &lt;- flights %&gt;%
+  select(month, flight) %&gt;%
+  filter(month==7:9)</code></pre>
+</div>
+<div id="arrived-more-than-two-hours-late-but-didnt-leave-late" class="section level2">
+<h2>Arrived more than two hours late, but didn’t leave late</h2>
+<pre class="r"><code>latefights &lt;- flights %&gt;%
+  select(flight, dep_delay, arr_delay) %&gt;%
+  filter(dep_delay==0 &amp; arr_delay &gt; 120)</code></pre>
+</div>
+<div id="were-delayed-by-at-least-an-hour-but-arrival-delay-is-less-than-30-minutes." class="section level2">
+<h2>Were delayed by at least an hour, but arrival delay is less than 30 minutes.</h2>
+<pre class="r"><code>delayedflights &lt;- flights %&gt;%
+  select(flight, dep_delay, arr_delay) %&gt;%
+  filter(dep_delay &gt;=60 &amp; arr_delay &lt; 30)</code></pre>
+</div>
+<div id="departed-before-6am-remember-to-check-the-time" class="section level2">
+<h2>Departed before 6am (remember to check the time)</h2>
+<pre class="r"><code>earlyflights &lt;- flights %&gt;%
+  select(flight, dep_time) %&gt;%
+  filter(dep_time &lt; 600)</code></pre>
+</div>
+</div>
+<div id="is-there-a-relationship-between-proportion-of-cancelled-flights-and-the-average-delays-remember-that-a-missing-dep_delay-or-arr_delay-i.e.-is.na-is-true-represents-a-cancelled-flight.-make-a-scatter-plot-that-have-the-proportion-of-cancelled-flights-on-the-x-axis-and-the-average-delay-on-the-y-axis.-group-the-observations-by-month.-also-make-sure-you-plot-straight-line-using-geom_smoothmethodlm." class="section level1">
+<h1>Is there a relationship between proportion of cancelled flights and the average delays? Remember that a missing dep_delay or arr_delay (i.e., is.na() is TRUE) represents a cancelled flight. Make a scatter plot that have the proportion of cancelled flights on the x-axis, and the average delay on the y-axis. Group the observations by month. Also make sure you plot straight line using geom_smooth(method=‘lm’).</h1>
+<pre class="r"><code>canceled &lt;- flights %&gt;% 
+  group_by(month) %&gt;%
+  summarize(count_canceled=sum(is.na(dep_delay)), 
+            av_delay = mean(dep_delay, na.rm = TRUE))
   
 
-ggplot(lifeexp_by_year, aes(x=year, y=avg_life)) +
-  geom_point() </code></pre>
-</div>
-<div id="exercise-3" class="section level1">
-<h1>Exercise 3:</h1>
-<p>Let’s make the same scatter plot but for multiple countries and using gdpPercap. Again, you’ll use the filter command. Let’s say we want to use Mexico, Canada and Iran. We can use the %in% operator to find which elements belong to a given list.</p>
-<pre class="r"><code>dgpdata &lt;- data %&gt;%
-  group_by(country) %&gt;% 
-  select(gdpPercap, year) %&gt;% 
-  filter(country %in% c(&#39;Canada&#39;,&#39;Iran&#39;, &#39;Mexico&#39;)) 
-
-
-ggplot(dgpdata, aes(x=year, y=gdpPercap, color=country)) +
-  geom_point()+
-  geom_line() +
-  ggtitle(&quot;GDP in Canada, Iran and Mexico&quot;) +
-      xlab(&quot;Years&quot;) +
-      ylab(&quot;GDP&quot;) </code></pre>
+ggplot(canceled, aes(x=count_canceled, y=av_delay))+
+  geom_point(aes(color=month))+
+  geom_smooth(method=&#39;lm&#39;)</code></pre>
 </div>
 
 

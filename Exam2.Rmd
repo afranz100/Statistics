@@ -63,6 +63,8 @@ worst_dest <- flights %>%
   group_by(dest) %>%
   summarize(count_canceled=sum(is.na(dep_delay))) %>%
   arrange(desc(count_canceled)) %>%
+  top_n(10)
+
   mutate(count=1:length(dest)) %>%
   filter(count <= 10)
 
@@ -70,6 +72,8 @@ best_dest <- flights %>%
   group_by(dest) %>%
   summarize(count_canceled=sum(is.na(dep_delay))) %>%
   arrange(count_canceled) %>%
+  top_n(-10)
+
   mutate(count=1:length(dest)) %>%
   filter(count <= 10)
 
@@ -84,8 +88,7 @@ high_delay <- flights %>%
   filter(!is.na(dep_delay)) %>%
   summarize(av_delay=mean(dep_delay)) %>%
   arrange(desc(av_delay)) %>%
-  mutate(count=1:length(dest)) %>%
-  filter(count <= 10)
+  top_n(10)
 
 ggplot(high_delay, aes(x=dest, y=av_delay)) +
   geom_bar(stat = "identity")
@@ -96,15 +99,11 @@ ggplot(high_delay, aes(x=dest, y=av_delay)) +
 
 ```{r, eval=FALSE}
 
-flightdata <- flights
-
-
 fast_flights <- flights %>%
   mutate(speed=distance/air_time*60) %>%
   arrange(desc(speed)) %>%
-  mutate(count=1:length(dest)) %>%
-  filter(count <= 10) %>%
-  select(dest, speed)
+  select(dest, flight, speed) 
+  
  
 ```
 
@@ -117,8 +116,7 @@ carrier_delays <- flights %>%
   group_by(carrier) %>%
   filter(!is.na(dep_delay)) %>%
   summarize(av_delay=mean(dep_delay)) %>%
-  arrange(desc(av_delay)) %>%
-  mutate(Longest_Delays_Ranked=1:length(carrier))
+  arrange(desc(av_delay))
 
 ggplot(carrier_delays, aes(x=carrier, y=av_delay))+
   geom_bar(stat = "identity", aes(fill=carrier))
@@ -134,14 +132,15 @@ daydelay <- flights %>%
   select(day,dep_time,dep_delay) %>%
   group_by(dep_time) %>%
   summarize(mean_delay=mean(dep_delay, na.rm=TRUE)) %>%
-  mutate(time=dep_time/100, delay_time= mean_delay/100) 
+  mutate(time=dep_time/100, delay_time= mean_delay/60) 
   
 
-ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
+ggplot(daydelay, aes(x=dep_time, y=delay_time))+
   geom_line()+
   ggtitle("Average Delays in One Day") +
       xlab("Time of Day (in military time)") +
-      ylab("Average Delay") 
+      ylab("Average Delay (in hours)") 
+
 
 ```
 
@@ -150,10 +149,11 @@ ggplot(daydelay, aes(x=dep_time, y=mean_delay))+
 ```{r, eval=FALSE}
 
 chicagoflights <- flights %>%
-  select(origin, dest, dep_delay) %>%
+  select(origin, dest, dep_delay, carrier) %>%
   filter(dest=="ORD") %>%
-  group_by(origin) %>%
-  summarize(av_delay=mean(dep_delay, na.rm=TRUE))
+  group_by(origin, carrier) %>%
+  summarize(av_delay=mean(dep_delay, na.rm=TRUE)) %>%
+  arrange(av_delay) 
 
 
 ```
@@ -164,28 +164,43 @@ chicagoflights <- flights %>%
 furthestdest <- flights %>%
   select(distance, air_time, dest) %>%
   group_by(dest) %>%
-  summarize(av_distance=mean(distance)) %>%
+  summarize(av_distance=mean(distance),
+            travel_time=mean(air_time/60, na.rm=TRUE)) %>%
   arrange(desc(av_distance)) %>%
-  mutate(Top_10=1:length(av_distance)) %>%
-  filter(Top_10 <= 10)
-  
+  top_n(10)
 
 ```
 
 #10) What are the most common destinations from NYC airports (i.e., destinations that have highest number of flights)? Make a list of 10.
 ```{r, eval=FALSE}
+
 most_common_dest <- flights %>%
-  select(dest) %>%
-  
-  
-  
-ggplot(most_common_dest, aes(x=dest)) +
-  geom_histogram(bin=20)
+  group_by(dest) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  top_n(10)
+
 
 ```
 
 #11) Which NYC airport and which carrier has more long flights? Can you guess from this list which carriers have lots of international flights? (group_by both NYC airports and carrier).
 ```{r, eval=FALSE}
+
+longflightsairport <- flights %>%
+  select(air_time, origin) %>%
+  filter(!is.na(air_time)) %>% 
+  group_by(origin) %>%
+  summarize(av_airtime=mean(air_time/60)) %>%
+  arrange(desc(av_airtime)) 
+
+
+longflightscarrier <- flights %>%
+  select(air_time, carrier) %>%
+  filter(!is.na(air_time)) %>% 
+  group_by(carrier) %>%
+  summarize(av_airtime=mean(air_time/60)) %>%
+  arrange(desc(av_airtime))
+  
 
 ```
 
