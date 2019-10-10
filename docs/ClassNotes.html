@@ -766,6 +766,106 @@ ggplot(canceled, aes(x=month, y=count_cancelled))+
 #Converts month to a category (factor), and ensures that when you are graphing you don&#39;t have partial month numbers </code></pre>
 </div>
 </div>
+<div id="october-10-probability-and-binomial-distributions" class="section level1">
+<h1>October 10: Probability and binomial distributions</h1>
+<div id="experimentally-creating-the-binomial-distributions" class="section level2">
+<h2>Experimentally creating the binomial distributions</h2>
+<pre class="r"><code>numbers &lt;- c(1:10)
+
+sample(numbers, 5, replace=TRUE) </code></pre>
+<pre><code>## [1] 9 9 7 5 1</code></pre>
+<pre class="r"><code>  #tells what you are sampling from, and how many times, and whether or   not that are replacing 
+
+sampled_numbers &lt;- sample(numbers,10000,replace = TRUE)
+
+hist(sampled_numbers)</code></pre>
+<p><img src="ClassNotes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<pre class="r"><code>  #The more you sample, the closer to uniform it becomes </code></pre>
+</div>
+<div id="creating-a-random-uniform-distribution" class="section level2">
+<h2>Creating a random, uniform distribution</h2>
+<pre class="r"><code>runif(10, min = 0, max = 1)</code></pre>
+<pre><code>##  [1] 0.3607844 0.4068229 0.1504562 0.9942799 0.7727940 0.9128996 0.5106036
+##  [8] 0.9164241 0.6653365 0.8615574</code></pre>
+<pre class="r"><code>  #sampled 10 numbers, with a range of 0 to 1</code></pre>
+</div>
+<div id="the-binomial-distribution" class="section level2">
+<h2>The binomial distribution</h2>
+<pre class="r"><code>binomialresults &lt;- rbinom(5,1, 0.5)
+  #5=number of flips, 1=number of coins, 0.5=probaility of getting heads
+
+mean(binomialresults)</code></pre>
+<pre><code>## [1] 0.4</code></pre>
+<pre class="r"><code>  #the more times you repeat it (the larger the x) the closer you will   get to 0.5</code></pre>
+</div>
+<div id="simulating-the-binomial-distribution-flipping-10-coins-and-find-the-mean-over-and-over" class="section level2">
+<h2>Simulating the binomial distribution: flipping 10 coins and find the mean, over and over</h2>
+<pre class="r"><code>flip_means &lt;- c()
+n_experiments &lt;- 100000
+for(i in 1:n_experiments) {
+  flip_means[i] &lt;- mean(rbinom(10,1,0.5))
+}
+
+hist(flip_means) </code></pre>
+<p><img src="ClassNotes_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+<div id="simulating-the-normal-distribution" class="section level2">
+<h2>Simulating the normal distribution:</h2>
+<pre class="r"><code>rnorm(n=5, mean=10, sd=4)</code></pre>
+<pre><code>## [1]  6.609715  9.269675  7.944309  1.056265 15.195308</code></pre>
+<pre class="r"><code>  #Give us 5 numbers with a mean 10, sd 4 in the shape of a normal        distribution
+
+mean(rnorm(5,10,4))</code></pre>
+<pre><code>## [1] 11.15607</code></pre>
+<pre class="r"><code>hist(rnorm(50,10,4))</code></pre>
+<p><img src="ClassNotes_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<pre class="r"><code>flip_meansnorm &lt;- c()
+n_experiments &lt;- 100000
+for(i in 1:n_experiments) {
+  flip_meansnorm[i] &lt;- mean(rnorm(5,20,5))
+}
+
+mean(flip_meansnorm)</code></pre>
+<pre><code>## [1] 19.9968</code></pre>
+<pre class="r"><code>sd(flip_meansnorm)</code></pre>
+<pre><code>## [1] 2.235207</code></pre>
+<pre class="r"><code>  #This is the SEM! Because it is the sd of the many flips </code></pre>
+</div>
+<div id="scores-in-an-experiment" class="section level2">
+<h2>Scores in an experiment</h2>
+<pre class="r"><code>scores &lt;- rnorm(10*2000,0,1)
+  #200 numbers, with mean=0, sd=1
+samples &lt;-rep(1:10, each=20)
+  #samples of your experiment 
+my_df &lt;- data.frame(samples,scores)
+
+library(ggplot2)
+library(dplyr)
+
+ggplot(my_df, aes(x=scores)) +
+  geom_histogram()+
+  facet_wrap(~samples) +
+  theme_classic()</code></pre>
+<p><img src="ClassNotes_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<pre class="r"><code>sample_means &lt;- my_df %&gt;%
+  group_by(samples) %&gt;%
+  summarise(means=mean(scores))</code></pre>
+</div>
+<div id="using-pnorm-tells-you-the-percentage-of-values-below-your-mean" class="section level2">
+<h2>Using pnorm: tells you the percentage of values below your mean</h2>
+<pre class="r"><code>pnorm(0,mean=0,sd=1)</code></pre>
+<pre><code>## [1] 0.5</code></pre>
+<pre class="r"><code>pnorm(1,mean=0, sd=1)</code></pre>
+<pre><code>## [1] 0.8413447</code></pre>
+</div>
+<div id="using-qnorm" class="section level2">
+<h2>Using qnorm:</h2>
+<pre class="r"><code>qnorm(0.025)</code></pre>
+<pre><code>## [1] -1.959964</code></pre>
+<pre class="r"><code>  #first number is area and you can get the corresponding z-score</code></pre>
+<pre class="r"><code>?gamma</code></pre>
+</div>
+</div>
 
 
 

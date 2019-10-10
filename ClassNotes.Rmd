@@ -458,3 +458,117 @@ ggplot(canceled, aes(x=month, y=count_cancelled))+
 #Converts month to a category (factor), and ensures that when you are graphing you don't have partial month numbers 
 
 ```
+
+
+#October 10: Probability and binomial distributions 
+
+##Experimentally creating the binomial distributions
+```{r}
+numbers <- c(1:10)
+
+sample(numbers, 5, replace=TRUE) 
+  #tells what you are sampling from, and how many times, and whether or   not that are replacing 
+
+sampled_numbers <- sample(numbers,10000,replace = TRUE)
+
+hist(sampled_numbers)
+  #The more you sample, the closer to uniform it becomes 
+
+```
+
+##Creating a random, uniform distribution
+```{r}
+runif(10, min = 0, max = 1)
+  #sampled 10 numbers, with a range of 0 to 1
+
+```
+
+##The binomial distribution
+```{r}
+binomialresults <- rbinom(5,1, 0.5)
+  #5=number of flips, 1=number of coins, 0.5=probaility of getting heads
+
+mean(binomialresults)
+  #the more times you repeat it (the larger the x) the closer you will   get to 0.5
+
+```
+
+##Simulating the binomial distribution: flipping 10 coins and find the mean, over and over
+```{r}
+
+flip_means <- c()
+n_experiments <- 100000
+for(i in 1:n_experiments) {
+  flip_means[i] <- mean(rbinom(10,1,0.5))
+}
+
+hist(flip_means) 
+
+```
+
+
+##Simulating the normal distribution: 
+```{r}
+rnorm(n=5, mean=10, sd=4)
+  #Give us 5 numbers with a mean 10, sd 4 in the shape of a normal        distribution
+
+mean(rnorm(5,10,4))
+
+hist(rnorm(50,10,4))
+
+
+flip_meansnorm <- c()
+n_experiments <- 100000
+for(i in 1:n_experiments) {
+  flip_meansnorm[i] <- mean(rnorm(5,20,5))
+}
+
+mean(flip_meansnorm)
+
+sd(flip_meansnorm)
+  #This is the SEM! Because it is the sd of the many flips 
+
+```
+
+##Scores in an experiment 
+```{r}
+scores <- rnorm(10*2000,0,1)
+  #200 numbers, with mean=0, sd=1
+samples <-rep(1:10, each=20)
+  #samples of your experiment 
+my_df <- data.frame(samples,scores)
+
+library(ggplot2)
+library(dplyr)
+
+ggplot(my_df, aes(x=scores)) +
+  geom_histogram()+
+  facet_wrap(~samples) +
+  theme_classic()
+
+
+sample_means <- my_df %>%
+  group_by(samples) %>%
+  summarise(means=mean(scores))
+
+```
+
+##Using pnorm: tells you the percentage of values below your mean
+```{r}
+pnorm(0,mean=0,sd=1)
+pnorm(1,mean=0, sd=1)
+
+```
+
+##Using qnorm: 
+```{r}
+qnorm(0.025)
+  #first number is area and you can get the corresponding z-score
+```
+
+```{r}
+?gamma
+
+
+```
+
