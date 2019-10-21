@@ -14,6 +14,8 @@ navbar:
       href: Assignment3.html
     - text: "Assignment 4"
       href: Assignment4.html
+    - text: "Assignment 5"
+      href: Assignment5.html
     - text: "Exam 1"
       href: Exam1.html
     - text: "Exam 2"

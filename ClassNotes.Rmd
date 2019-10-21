@@ -463,7 +463,7 @@ ggplot(canceled, aes(x=month, y=count_cancelled))+
 #October 10: Probability and binomial distributions 
 
 ##Experimentally creating the binomial distributions
-```{r}
+```{r, eval=FALSE}
 numbers <- c(1:10)
 
 sample(numbers, 5, replace=TRUE) 
@@ -477,14 +477,14 @@ hist(sampled_numbers)
 ```
 
 ##Creating a random, uniform distribution
-```{r}
+```{r, eval=FALSE}
 runif(10, min = 0, max = 1)
   #sampled 10 numbers, with a range of 0 to 1
 
 ```
 
 ##The binomial distribution
-```{r}
+```{r, eval=FALSE}
 binomialresults <- rbinom(5,1, 0.5)
   #5=number of flips, 1=number of coins, 0.5=probaility of getting heads
 
@@ -494,7 +494,7 @@ mean(binomialresults)
 ```
 
 ##Simulating the binomial distribution: flipping 10 coins and find the mean, over and over
-```{r}
+```{r, eval=FALSE}
 
 flip_means <- c()
 n_experiments <- 100000
@@ -508,7 +508,7 @@ hist(flip_means)
 
 
 ##Simulating the normal distribution: 
-```{r}
+```{r, eval=FALSE}
 rnorm(n=5, mean=10, sd=4)
   #Give us 5 numbers with a mean 10, sd 4 in the shape of a normal        distribution
 
@@ -531,7 +531,7 @@ sd(flip_meansnorm)
 ```
 
 ##Scores in an experiment 
-```{r}
+```{r, eval=FALSE}
 scores <- rnorm(10*2000,0,1)
   #200 numbers, with mean=0, sd=1
 samples <-rep(1:10, each=20)
@@ -554,21 +554,193 @@ sample_means <- my_df %>%
 ```
 
 ##Using pnorm: tells you the percentage of values below your mean
-```{r}
+```{r, eval=FALSE}
 pnorm(0,mean=0,sd=1)
 pnorm(1,mean=0, sd=1)
 
 ```
 
 ##Using qnorm: 
-```{r}
+```{r, eval=FALSE}
 qnorm(0.025)
   #first number is area and you can get the corresponding z-score
 ```
 
-```{r}
+```{r, eval=FALSE}
 ?gamma
 
+```
+
+
+#October 17: Distributions (continued)
+
+##Calculate the proability of getting one head from two coin flips
+```{r, eval=FALSE}
+dbinom(x=1, size = 2, prob=0.5)
+  #x=number of heads you want to observe, size=two coins/flops,           prob=fairness of coin aka in one flip what do you expect?
+dbinom(x=1, size = 3, prob=0.5)
+  #one head with three coins? 
+```
+
+##Addition Rule: A or B is the P(A) + P(B)
+```{r, eval=FALSE}
+#On an exam, what is the probability of getting of getting 4 or 5 questions right? There are 4 choices per question and 16 total questions
+
+dbinom(x=4, size = 16, prob=0.25) + dbinom(x=5, size = 16, prob=0.25)
+
+#What is the probaility of getting at least 4 questions right? 
+1-(dbinom(x=0, size = 16, prob=0.25) + dbinom(x=1, size = 16, prob=0.25) + dbinom(x=2, size = 16, prob=0.25) + dbinom(x=3, size = 16, prob=0.25))
+
+```
+
+##Another way to find if you want at least 4 questions right 
+```{r}
+pbinom(q=3, size = 16, prob = 0.25, lower.tail = FALSE)
+  #q=size of questions you DON'T get right, this funciton automatically   takes the lower tail, so if you want upper tail, you must specify that
+
+```
+##The normal distribution
+```{r}
+rbinom(n=10, size=2, prob = 0.5)
+  #calls staring with "r" will give you a random number 
+  #n=number of coins you have 
+  #size=number of flips that you have 
+  #This will spit out the number of heads that you get 
+
+```
+
+##Getting information on the number of coins 
+```{r}
+b_samples <- rbinom(n=10000, size=10, prob = 0.5)
+hist(b_samples)
+table(b_samples)/sum(b_samples)
+  #this gives you the probability of 0 heads, 1 head and 2 heads in this   sample. This prob. will change sample to sample. 
+```
+
+
+#Simulating the normal distribution
+```{r}
+x<- seq(-4,4, length=100)
+hx <- dnorm(x)
+my_df <- data.frame(x, hx)
+library(ggplot2)
+ggplot(data = my_df, aes(x=x, y=hx)) +
+  geom_line()
+
+#This gives a point (likelihood)
+dnorm(x=-2, mean=0, sd-1)
+
+```
+
+#Calulating area under the curve of the normal distribution
+```{r}
+
+pnorm(q=0, mean=0, sd=1, lower.tail = TRUE)
+  #q=where do you want to start calculating area, on x
+
+```
+
+##Calculating the area between two points on normal distribution
+```{r}
+#Area between 1 and -1
+pnorm(q=1, mean=0, sd=1, lower.tail = TRUE) - pnorm(q=-1, mean=0, sd=1, lower.tail = TRUE)
+```
+
+##Random number generator on the normal curve
+```{r}
+rnorm(n=10, mean=0, sd=1)
+  #generates 10 numbers from the normal distribution, with mean=0 and     sd=1
+
+```
+
+##Simulating the area under the curve 
+```{r}
+
+numbers <- rnorm(n=1000000, mean=0, sd=1)
+mean(numbers > -1 & numbers < 1)
+
+
+```
+
+
+##Problem: what is the percentage of people with IQ less than 125?
+```{r}
+#Normally distributed, mean=100, sd=15
+#There are two ways to do this, mathimatically using the normal curve and then by sampling 100 people and average their IQs. 
+
+#Mathimatically: 
+pnorm(q=125, mean=100, sd=15, lower.tail = TRUE)
+
+#Simulating it: 
+IQnumbers <- rnorm(n=10000000, mean = 100, sd=15)
+mean(IQnumbers < 125)
+  #the greater the sample size, the closer you get to the mathematical    way
+
+```
+
+##Problem: what is the percentage of people with IQ greater than 125?
+```{r}
+pnorm(q=125, mean=100, sd=15, lower.tail = FALSE)
+```
+
+##Using percentiles in the normal distribution
+```{r}
+qnorm(p=0.15, mean=0, sd=1, lower.tail = TRUE)
+  #give a probaility and get value. 
+
+pnorm(q=-1, mean=0, sd=1, lower.tail = TRUE)
+  #in pnorm you give a value and get a   probability 
+
+```
+
+
+##Sampling: you are generally not able to know the population values. Must sample to estimate. N vs N-1 in sd
+```{r}
+iq_small_sample <-rnorm(n=5, mean=100, sd=15)
+hist(iq_small_sample)
+mean(iq_small_sample)
+
+#divide by N
+sqrt(sum((iq_small_sample-mean(iq_small_sample))^2) / (length(iq_small_sample)))
+
+#divide by N-1
+sd(iq_small_sample)
+
+#Simulating why we use N vs N-1
+n_exp <- 1000
+n_samples <- c(1:10)
+means_of_samples <- c()
+sds_of_samples_uncorrected <- c()
+
+for (this_samples_n in n_samples) {
+  this_samples_mean <- c()
+  this_samples_sd <- c()
+  for (i in 1:n_exp) {
+    iq_sample <- rnorm(n=this_samples_n, mean=100, sd=15)
+    this_samples_mean[i] <- mean(iq_sample)
+    this_samples_sd [1] <-sqrt(sum((iq_small_sample-mean(iq_small_sample))^2) / (length(iq_small_sample)))
+  }
+  means_of_samples[this_samples_n] <- mean(this_samples_mean)
+  sds_of_samples_uncorrected[this_samples_n] <- mean(this_samples_sd)
+}
+
+result <- data.frame (n=n_samples, 
+                      means=means_of_samples, 
+                      sds=sds_of_samples_uncorrected)
+
+
+library(ggplot2)
+ggplot(results, aes(x=n, y=means)) +
+  geom_line(color='red') +
+  geom_point() +
+  geom_hline(yintercept = 100) +
+  ylim(c(95, 105))
+
+ggplot(results, aes(x=n, y=sds))+
+  geom_line(color='red') +
+  geom_point()+
+  geom_hline(yintercept = 15) +
+  ylim(c(-1,17))
 
 ```
 

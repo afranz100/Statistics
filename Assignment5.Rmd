@@ -1,0 +1,123 @@
+---
+title: "Assignment 5"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#A student is taking an exam with 20 MCQ questions, where each question has 4 choices and the student is randomly answering those questions (so P=0.25). Use R code to answer the following questions: 
+
+##1) Calculate the probability of getting 1 questions correct? 
+```{r}
+dbinom(x=1, size = 20, prob=0.25) 
+
+```
+
+##2) Calculate the probability of getting AT LEAST 5 questions correct? 
+```{r}
+pbinom(q=4, size = 20, prob = 0.25, lower.tail = FALSE)
+```
+
+##3) Calculate the probability of getting 15 questions correct? 
+```{r}
+dbinom(x=15, size = 20, prob=0.25) 
+```
+
+##4) Calculate the probability of passing the exam (passing grade is 60%).
+```{r}
+
+dbinom(x=(0.6*20), size = 20, prob=0.25) 
+
+```
+
+##5) Simulate a class of 100 students taking the same exam (where again each student is making random guesses).
+```{r}
+example_class <- rbinom(n=100, size=20, prob = 0.25)
+```
+
+###5a) What is the average of the class (or the average of correct answers per student)? 
+```{r}
+mean(example_class)
+```
+
+###5b) If we increase the class size to 1000 students, what happens to the average? (keep in mind that the true average of the correct answers for any given number of students is simply P * N or 0.25 * 20 = 5 correct answers).
+```{r}
+example_class_big <- rbinom(n=1000, size=20, prob = 0.25)
+
+mean(example_class_big)
+
+```
+
+##6) Use simulations to answer the following questions: 
+###6a) Is the maximum (max) a biased estimate or an unbiased estimate of population maximum? 
+```{r}
+n_experiments <- 1000 
+n_samples <- c(1:15)
+max_of_sample_n <- c()
+
+for (this_sample_n in n_samples) { 
+  this_sample_max <- c() 
+  for (i in 1:n_experiments) {
+    iq_sample <- rnorm(n=this_sample_n, mean=100, sd=15)
+    this_sample_max[i] <- max(iq_sample)
+    }
+max_of_sample_n[this_sample_n] <- max(this_sample_max) 
+}
+
+```
+
+```{r}
+library(ggpubr)
+library(ggplot2)
+
+results <- data.frame(n=n_samples, maxes=max_of_sample_n)
+
+g1 <- ggplot(results, aes(x=n, y=maxes))+ geom_line(color='red') +
+  geom_point() +
+  geom_hline(yintercept = 100) + ylim(c(95, 105)) +
+  theme_classic()
+
+g2 <- ggplot(results, aes(x=n, y=sds))+
+  geom_line(color='red') + 
+  geom_point() + 
+  geom_hline(yintercept = 15) + ylim(c(-1, 17)) + 
+  theme_classic()
+
+```
+
+
+
+```{r}
+n_experiments <- 1000 
+n_samples <- c(1:15)
+means_of_sample_n <- c()
+sds_uncorrected_of_sample_n <- c()
+
+for (this_sample_n in n_samples) { 
+  this_sample_means <- c() 
+  this_sample_sds_uncorrected <- c() 
+  for (i in 1:n_experiments) {
+    iq_sample <- rnorm(n=this_sample_n, mean=100, sd=15)
+    this_sample_means[i] <- mean(iq_sample)
+    this_sample_sds_uncorrected[i] <- sqrt(sum((iq_sample-mean(iq_sample))^2)/(length(iq_sample)))
+    }
+means_of_sample_n[this_sample_n] <- mean(this_sample_means) sds_uncorrected_of_sample_n[this_sample_n] <- mean(this_sample_sds_uncorrected)
+}
+
+
+```
+
+
+
+###6b) Is the median (median) a biased estimate or an unbiased estimate of the population median? 
+###6c) Is the variance a biased or unbiased estimate of population variance? (DO NOT USE var, rather, use the original formula that divides by N)
+You might want to use an R Markdown file to answer those questions.
