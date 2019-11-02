@@ -25,16 +25,18 @@ dbinom(x=1, size = 20, prob=0.25)
 ##2) Calculate the probability of getting AT LEAST 5 questions correct? 
 ```{r}
 pbinom(q=4, size = 20, prob = 0.25, lower.tail = FALSE)
+
 ```
+
 
 ##3) Calculate the probability of getting 15 questions correct? 
 ```{r}
 dbinom(x=15, size = 20, prob=0.25) 
+
 ```
 
 ##4) Calculate the probability of passing the exam (passing grade is 60%).
 ```{r}
-
 dbinom(x=(0.6*20), size = 20, prob=0.25) 
 
 ```
@@ -42,11 +44,13 @@ dbinom(x=(0.6*20), size = 20, prob=0.25)
 ##5) Simulate a class of 100 students taking the same exam (where again each student is making random guesses).
 ```{r}
 example_class <- rbinom(n=100, size=20, prob = 0.25)
+
 ```
 
 ###5a) What is the average of the class (or the average of correct answers per student)? 
 ```{r}
 mean(example_class)
+
 ```
 
 ###5b) If we increase the class size to 1000 students, what happens to the average? (keep in mind that the true average of the correct answers for any given number of students is simply P * N or 0.25 * 20 = 5 correct answers).
@@ -61,7 +65,7 @@ mean(example_class_big)
 ###6a) Is the maximum (max) a biased estimate or an unbiased estimate of population maximum? 
 ```{r}
 n_experiments <- 1000 
-n_samples <- c(1:15)
+n_samples <- c(1:20)
 max_of_sample_n <- c()
 
 for (this_sample_n in n_samples) { 
@@ -70,54 +74,74 @@ for (this_sample_n in n_samples) {
     iq_sample <- rnorm(n=this_sample_n, mean=100, sd=15)
     this_sample_max[i] <- max(iq_sample)
     }
-max_of_sample_n[this_sample_n] <- max(this_sample_max) 
+max_of_sample_n[this_sample_n] <- mean(this_sample_max) 
 }
 
-```
 
-```{r}
-library(ggpubr)
 library(ggplot2)
 
-results <- data.frame(n=n_samples, maxes=max_of_sample_n)
+results_max <- data.frame(n=n_samples, maxes=max_of_sample_n)
 
-g1 <- ggplot(results, aes(x=n, y=maxes))+ geom_line(color='red') +
-  geom_point() +
-  geom_hline(yintercept = 100) + ylim(c(95, 105)) +
-  theme_classic()
+ggplot(results_max, aes(x=n, y=maxes))+ 
+  geom_line(color='red') +
+  geom_point() 
+```
 
-g2 <- ggplot(results, aes(x=n, y=sds))+
+
+###6b) Is the median (median) a biased estimate or an unbiased estimate of the population median? 
+```{r}
+
+n_experiments <- 1000 
+n_samples <- c(1:20)
+medians_of_sample_n <- c()
+
+for (this_sample_n in n_samples) { 
+  this_sample_medians <- c() 
+  for (i in 1:n_experiments) {
+    iq_sample <- rnorm(n=this_sample_n, mean=100, sd=15)
+    this_sample_medians[i] <- median(iq_sample)
+  }
+medians_of_sample_n[this_sample_n] <- mean(this_sample_medians) 
+}
+
+results_median <- data.frame(n=n_samples, medians=medians_of_sample_n)
+
+ ggplot(results_median, aes(x=n, y=medians))+
   geom_line(color='red') + 
-  geom_point() + 
-  geom_hline(yintercept = 15) + ylim(c(-1, 17)) + 
-  theme_classic()
+  geom_point() 
 
 ```
 
 
+###6c) Is the variance a biased or unbiased estimate of population variance? (DO NOT USE var, rather, use the original formula that divides by N)
 
 ```{r}
 n_experiments <- 1000 
 n_samples <- c(1:15)
-means_of_sample_n <- c()
-sds_uncorrected_of_sample_n <- c()
+var_uncorrected_of_sample_n <- c()
 
 for (this_sample_n in n_samples) { 
-  this_sample_means <- c() 
-  this_sample_sds_uncorrected <- c() 
+  this_sample_var_uncorrected <- c() 
   for (i in 1:n_experiments) {
     iq_sample <- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_means[i] <- mean(iq_sample)
-    this_sample_sds_uncorrected[i] <- sqrt(sum((iq_sample-mean(iq_sample))^2)/(length(iq_sample)))
+    this_sample_var_uncorrected[i] <- sum((iq_sample-mean(iq_sample))^2)/(length(iq_sample))
     }
-means_of_sample_n[this_sample_n] <- mean(this_sample_means) sds_uncorrected_of_sample_n[this_sample_n] <- mean(this_sample_sds_uncorrected)
+  var_uncorrected_of_sample_n[this_sample_n] <- mean(this_sample_var_uncorrected)
 }
 
 
+
+results_var <- data.frame(n=n_samples, vars=var_uncorrected_of_sample_n)
+
+ ggplot(results_var, aes(x=n, y=vars))+
+  geom_line(color='red') + 
+  geom_point() +
+  geom_hline(yintercept = 15*15) 
+ 
 ```
 
-
-
-###6b) Is the median (median) a biased estimate or an unbiased estimate of the population median? 
-###6c) Is the variance a biased or unbiased estimate of population variance? (DO NOT USE var, rather, use the original formula that divides by N)
 You might want to use an R Markdown file to answer those questions.
+
+
+
+

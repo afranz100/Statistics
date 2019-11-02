@@ -11,7 +11,7 @@
 
 
 
-<title>Assignment 5</title>
+<title>Exam 3</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -398,10 +398,16 @@ div.tocify {
   <a href="Assignment5.html">Assignment 5</a>
 </li>
 <li>
+  <a href="Assignment6.html">Assignment 6</a>
+</li>
+<li>
   <a href="Exam1.html">Exam 1</a>
 </li>
 <li>
   <a href="Exam2.html">Exam 2</a>
+</li>
+<li>
+  <a href="Exam3.html">Exam 3</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -415,125 +421,29 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Assignment 5</h1>
+<h1 class="title toc-ignore">Exam 3</h1>
 
 </div>
 
 
-<div id="a-student-is-taking-an-exam-with-20-mcq-questions-where-each-question-has-4-choices-and-the-student-is-randomly-answering-those-questions-so-p0.25.-use-r-code-to-answer-the-following-questions" class="section level1">
-<h1>A student is taking an exam with 20 MCQ questions, where each question has 4 choices and the student is randomly answering those questions (so P=0.25). Use R code to answer the following questions:</h1>
-<div id="calculate-the-probability-of-getting-1-questions-correct" class="section level2">
-<h2>1) Calculate the probability of getting 1 questions correct?</h2>
-<pre class="r"><code>dbinom(x=1, size = 20, prob=0.25) </code></pre>
-<pre><code>## [1] 0.02114141</code></pre>
+<div id="if-12-biased-coins-p.65-are-flipped-once.-what-is-the-probability-of-getting-exactly-10-heads" class="section level1">
+<h1>1) If 12 biased coins (P=.65) are flipped once. What is the probability of getting exactly 10 heads?</h1>
 </div>
-<div id="calculate-the-probability-of-getting-at-least-5-questions-correct" class="section level2">
-<h2>2) Calculate the probability of getting AT LEAST 5 questions correct?</h2>
-<pre class="r"><code>pbinom(q=4, size = 20, prob = 0.25, lower.tail = FALSE)</code></pre>
-<pre><code>## [1] 0.5851585</code></pre>
+<div id="if-12-biased-coins-p.65-are-flipped-once.-what-is-the-probability-of-getting-at-least-10-heads" class="section level1">
+<h1>2) If 12 biased coins (P=.65) are flipped once. What is the probability of getting AT LEAST 10 heads?</h1>
+<p>Your friend is a big Starbucks fan and he claims that no other coffee even comes close to Starbucks coffee. You suspect he is being a little grandiose. In fact, you wonder whether he can even taste the difference between Starbucks and the local roaster’s coffee. Your friend agrees to the following experiment: While blindfolded, he is given 6 opportunities to taste from two cups of coffee and tell you which of the two is coming from Starbucks. The cups are identical and contain the same type of coffee except that one contains coffee made from beans supplied and roasted by Starbucks and the other by the local roaster. After each tasting of the two cups, you remove any telltale signs and randomize which of the two cups is given first for the next trial. Believe it or not, your friend correctly identifies Starbucks on all 6 trials! #3) Calculate the probability of that outcome and based on that probability what do you conclude about whether your friend can tell the difference or not? Please also give the R command that calculates the probability.</p>
 </div>
-<div id="calculate-the-probability-of-getting-15-questions-correct" class="section level2">
-<h2>3) Calculate the probability of getting 15 questions correct?</h2>
-<pre class="r"><code>dbinom(x=15, size = 20, prob=0.25) </code></pre>
-<pre><code>## [1] 3.426496e-06</code></pre>
+<div id="using-simulations-draw-1-to-1000-samples-from-a-population-with-a-mean-of-50-and-a-standard-deviation-of-10.-calculate-the-mean-of-each-sample-and-make-a-plot-that-shows-how-that-mean-changes-as-you-increase-your-sample-size." class="section level1">
+<h1>4) Using simulations, draw 1 to 1000 samples from a population with a mean of 50 and a standard deviation of 10. Calculate the mean of each sample, and make a plot that shows how that mean changes as you increase your sample size.</h1>
+<p>Based on that plot, is the mean a biased or an unbiased estimate of the population mean?</p>
 </div>
-<div id="calculate-the-probability-of-passing-the-exam-passing-grade-is-60." class="section level2">
-<h2>4) Calculate the probability of passing the exam (passing grade is 60%).</h2>
-<pre class="r"><code>dbinom(x=(0.6*20), size = 20, prob=0.25) </code></pre>
-<pre><code>## [1] 0.0007516875</code></pre>
+<div id="using-simulations-draw-1-to-1000-samples-from-a-population-with-a-mean-of-50-and-a-standard-deviation-of-10.-calculate-the-standard-deviation-i.e.-sd-or-the-uncorrected-version-does-not-matter-which-of-each-sample-and-make-a-plot-that-shows-how-this-standard-deviation-changes-as-you-increase-your-sample-size." class="section level1">
+<h1>5) Using simulations, draw 1 to 1000 samples from a population with a mean of 50 and a standard deviation of 10. Calculate the standard deviation (i.e., <code>sd</code> or the uncorrected version – does not matter which) of each sample and make a plot that shows how this standard deviation changes as you increase your sample size.</h1>
+<p>Based on that plot, is the standard deviation a biased or an unbiased estimate of the population standard deviation?</p>
 </div>
-<div id="simulate-a-class-of-100-students-taking-the-same-exam-where-again-each-student-is-making-random-guesses." class="section level2">
-<h2>5) Simulate a class of 100 students taking the same exam (where again each student is making random guesses).</h2>
-<pre class="r"><code>example_class &lt;- rbinom(n=100, size=20, prob = 0.25)</code></pre>
-<div id="a-what-is-the-average-of-the-class-or-the-average-of-correct-answers-per-student" class="section level3">
-<h3>5a) What is the average of the class (or the average of correct answers per student)?</h3>
-<pre class="r"><code>mean(example_class)</code></pre>
-<pre><code>## [1] 5.1</code></pre>
-</div>
-<div id="b-if-we-increase-the-class-size-to-1000-students-what-happens-to-the-average-keep-in-mind-that-the-true-average-of-the-correct-answers-for-any-given-number-of-students-is-simply-p-n-or-0.25-20-5-correct-answers." class="section level3">
-<h3>5b) If we increase the class size to 1000 students, what happens to the average? (keep in mind that the true average of the correct answers for any given number of students is simply P * N or 0.25 * 20 = 5 correct answers).</h3>
-<pre class="r"><code>example_class_big &lt;- rbinom(n=1000, size=20, prob = 0.25)
-
-mean(example_class_big)</code></pre>
-<pre><code>## [1] 5.002</code></pre>
-</div>
-</div>
-<div id="use-simulations-to-answer-the-following-questions" class="section level2">
-<h2>6) Use simulations to answer the following questions:</h2>
-<div id="a-is-the-maximum-max-a-biased-estimate-or-an-unbiased-estimate-of-population-maximum" class="section level3">
-<h3>6a) Is the maximum (max) a biased estimate or an unbiased estimate of population maximum?</h3>
-<pre class="r"><code>n_experiments &lt;- 1000 
-n_samples &lt;- c(1:20)
-max_of_sample_n &lt;- c()
-
-for (this_sample_n in n_samples) { 
-  this_sample_max &lt;- c() 
-  for (i in 1:n_experiments) {
-    iq_sample &lt;- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_max[i] &lt;- max(iq_sample)
-    }
-max_of_sample_n[this_sample_n] &lt;- mean(this_sample_max) 
-}
-
-
-library(ggplot2)
-
-results_max &lt;- data.frame(n=n_samples, maxes=max_of_sample_n)
-
-ggplot(results_max, aes(x=n, y=maxes))+ 
-  geom_line(color=&#39;red&#39;) +
-  geom_point() </code></pre>
-<p><img src="Assignment5_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-</div>
-<div id="b-is-the-median-median-a-biased-estimate-or-an-unbiased-estimate-of-the-population-median" class="section level3">
-<h3>6b) Is the median (median) a biased estimate or an unbiased estimate of the population median?</h3>
-<pre class="r"><code>n_experiments &lt;- 1000 
-n_samples &lt;- c(1:20)
-medians_of_sample_n &lt;- c()
-
-for (this_sample_n in n_samples) { 
-  this_sample_medians &lt;- c() 
-  for (i in 1:n_experiments) {
-    iq_sample &lt;- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_medians[i] &lt;- median(iq_sample)
-  }
-medians_of_sample_n[this_sample_n] &lt;- mean(this_sample_medians) 
-}
-
-results_median &lt;- data.frame(n=n_samples, medians=medians_of_sample_n)
-
- ggplot(results_median, aes(x=n, y=medians))+
-  geom_line(color=&#39;red&#39;) + 
-  geom_point() </code></pre>
-<p><img src="Assignment5_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-</div>
-<div id="c-is-the-variance-a-biased-or-unbiased-estimate-of-population-variance-do-not-use-var-rather-use-the-original-formula-that-divides-by-n" class="section level3">
-<h3>6c) Is the variance a biased or unbiased estimate of population variance? (DO NOT USE var, rather, use the original formula that divides by N)</h3>
-<pre class="r"><code>n_experiments &lt;- 1000 
-n_samples &lt;- c(1:15)
-var_uncorrected_of_sample_n &lt;- c()
-
-for (this_sample_n in n_samples) { 
-  this_sample_var_uncorrected &lt;- c() 
-  for (i in 1:n_experiments) {
-    iq_sample &lt;- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_var_uncorrected[i] &lt;- sum((iq_sample-mean(iq_sample))^2)/(length(iq_sample))
-    }
-  var_uncorrected_of_sample_n[this_sample_n] &lt;- mean(this_sample_var_uncorrected)
-}
-
-
-
-results_var &lt;- data.frame(n=n_samples, vars=var_uncorrected_of_sample_n)
-
- ggplot(results_var, aes(x=n, y=vars))+
-  geom_line(color=&#39;red&#39;) + 
-  geom_point() +
-  geom_hline(yintercept = 15*15) </code></pre>
-<p><img src="Assignment5_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>You might want to use an R Markdown file to answer those questions.</p>
-</div>
-</div>
+<div id="using-simulations-from-a-population-with-a-mean-of-50-and-a-standard-deviation-of-10-draw-a-sample-from-that-population-of-sizes-10-and-1000-and-then-calculate-the-95-confidence-interval-of-the-mean-for-each-sample-size." class="section level1">
+<h1>6) Using simulations from a population with a mean of 50 and a standard deviation of 10: draw a sample from that population of sizes 10 and 1000 and then calculate the 95% confidence interval of the mean for each sample size.</h1>
+<p>Do you see the confidence intervals in the higher sample closer to the mean or further from the mean? And why do you think is that? (hint: look at the SEM formula).</p>
 </div>
 
 

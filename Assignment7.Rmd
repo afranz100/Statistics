@@ -1,0 +1,34 @@
+---
+title: "Assignment 7"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+Make a simulation of two groups (N=10 per group) drawn from the same population with the following parameters: mean=40 and sd=10
+
+#1) Use the CLT to find the probability of observing a difference of 4 or more between the two groups (either positive or negative), by chance.
+```{r}
+
+```
+
+#2) Calculate the same probability using the randomization test.
+```{r}
+
+```
+
+#3) Given the similarity of the two probabilities, what is the biggest advantage of using the randomization test?
+```{r}
+
+```
+
+#4) While keeping everything else fixed, what happens to those probabilities if we increase the number of subjects (N) from 10 to 1000 – and why? (no need to provide the code, just write what happens and the reason you think behind this effect)
+```{r}
+
+```
+
+

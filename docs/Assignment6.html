@@ -11,7 +11,7 @@
 
 
 
-<title>Assignment 5</title>
+<title>Assignment 6</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -398,6 +398,9 @@ div.tocify {
   <a href="Assignment5.html">Assignment 5</a>
 </li>
 <li>
+  <a href="Assignment6.html">Assignment 6</a>
+</li>
+<li>
   <a href="Exam1.html">Exam 1</a>
 </li>
 <li>
@@ -415,125 +418,18 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Assignment 5</h1>
+<h1 class="title toc-ignore">Assignment 6</h1>
 
 </div>
 
 
-<div id="a-student-is-taking-an-exam-with-20-mcq-questions-where-each-question-has-4-choices-and-the-student-is-randomly-answering-those-questions-so-p0.25.-use-r-code-to-answer-the-following-questions" class="section level1">
-<h1>A student is taking an exam with 20 MCQ questions, where each question has 4 choices and the student is randomly answering those questions (so P=0.25). Use R code to answer the following questions:</h1>
-<div id="calculate-the-probability-of-getting-1-questions-correct" class="section level2">
-<h2>1) Calculate the probability of getting 1 questions correct?</h2>
-<pre class="r"><code>dbinom(x=1, size = 20, prob=0.25) </code></pre>
-<pre><code>## [1] 0.02114141</code></pre>
+<div id="explain-the-concept-of-sampling-error." class="section level1">
+<h1>1) Explain the concept of sampling error.</h1>
+<p>Generally, a researcher is never able to get every person from the population they are studying. For example if a scientist is looking at how effective a learning technique is for third graders, they are never going to be able to test all third graders and get the answer. Instead, they will sample a smaller selection of third graders in order to estimate the values that one would find for all third graders. The difference between the actual population values for the mean, median, mode etc. and the values obtained from the sample is the sampling error.</p>
 </div>
-<div id="calculate-the-probability-of-getting-at-least-5-questions-correct" class="section level2">
-<h2>2) Calculate the probability of getting AT LEAST 5 questions correct?</h2>
-<pre class="r"><code>pbinom(q=4, size = 20, prob = 0.25, lower.tail = FALSE)</code></pre>
-<pre><code>## [1] 0.5851585</code></pre>
-</div>
-<div id="calculate-the-probability-of-getting-15-questions-correct" class="section level2">
-<h2>3) Calculate the probability of getting 15 questions correct?</h2>
-<pre class="r"><code>dbinom(x=15, size = 20, prob=0.25) </code></pre>
-<pre><code>## [1] 3.426496e-06</code></pre>
-</div>
-<div id="calculate-the-probability-of-passing-the-exam-passing-grade-is-60." class="section level2">
-<h2>4) Calculate the probability of passing the exam (passing grade is 60%).</h2>
-<pre class="r"><code>dbinom(x=(0.6*20), size = 20, prob=0.25) </code></pre>
-<pre><code>## [1] 0.0007516875</code></pre>
-</div>
-<div id="simulate-a-class-of-100-students-taking-the-same-exam-where-again-each-student-is-making-random-guesses." class="section level2">
-<h2>5) Simulate a class of 100 students taking the same exam (where again each student is making random guesses).</h2>
-<pre class="r"><code>example_class &lt;- rbinom(n=100, size=20, prob = 0.25)</code></pre>
-<div id="a-what-is-the-average-of-the-class-or-the-average-of-correct-answers-per-student" class="section level3">
-<h3>5a) What is the average of the class (or the average of correct answers per student)?</h3>
-<pre class="r"><code>mean(example_class)</code></pre>
-<pre><code>## [1] 5.1</code></pre>
-</div>
-<div id="b-if-we-increase-the-class-size-to-1000-students-what-happens-to-the-average-keep-in-mind-that-the-true-average-of-the-correct-answers-for-any-given-number-of-students-is-simply-p-n-or-0.25-20-5-correct-answers." class="section level3">
-<h3>5b) If we increase the class size to 1000 students, what happens to the average? (keep in mind that the true average of the correct answers for any given number of students is simply P * N or 0.25 * 20 = 5 correct answers).</h3>
-<pre class="r"><code>example_class_big &lt;- rbinom(n=1000, size=20, prob = 0.25)
-
-mean(example_class_big)</code></pre>
-<pre><code>## [1] 5.002</code></pre>
-</div>
-</div>
-<div id="use-simulations-to-answer-the-following-questions" class="section level2">
-<h2>6) Use simulations to answer the following questions:</h2>
-<div id="a-is-the-maximum-max-a-biased-estimate-or-an-unbiased-estimate-of-population-maximum" class="section level3">
-<h3>6a) Is the maximum (max) a biased estimate or an unbiased estimate of population maximum?</h3>
-<pre class="r"><code>n_experiments &lt;- 1000 
-n_samples &lt;- c(1:20)
-max_of_sample_n &lt;- c()
-
-for (this_sample_n in n_samples) { 
-  this_sample_max &lt;- c() 
-  for (i in 1:n_experiments) {
-    iq_sample &lt;- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_max[i] &lt;- max(iq_sample)
-    }
-max_of_sample_n[this_sample_n] &lt;- mean(this_sample_max) 
-}
-
-
-library(ggplot2)
-
-results_max &lt;- data.frame(n=n_samples, maxes=max_of_sample_n)
-
-ggplot(results_max, aes(x=n, y=maxes))+ 
-  geom_line(color=&#39;red&#39;) +
-  geom_point() </code></pre>
-<p><img src="Assignment5_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-</div>
-<div id="b-is-the-median-median-a-biased-estimate-or-an-unbiased-estimate-of-the-population-median" class="section level3">
-<h3>6b) Is the median (median) a biased estimate or an unbiased estimate of the population median?</h3>
-<pre class="r"><code>n_experiments &lt;- 1000 
-n_samples &lt;- c(1:20)
-medians_of_sample_n &lt;- c()
-
-for (this_sample_n in n_samples) { 
-  this_sample_medians &lt;- c() 
-  for (i in 1:n_experiments) {
-    iq_sample &lt;- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_medians[i] &lt;- median(iq_sample)
-  }
-medians_of_sample_n[this_sample_n] &lt;- mean(this_sample_medians) 
-}
-
-results_median &lt;- data.frame(n=n_samples, medians=medians_of_sample_n)
-
- ggplot(results_median, aes(x=n, y=medians))+
-  geom_line(color=&#39;red&#39;) + 
-  geom_point() </code></pre>
-<p><img src="Assignment5_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-</div>
-<div id="c-is-the-variance-a-biased-or-unbiased-estimate-of-population-variance-do-not-use-var-rather-use-the-original-formula-that-divides-by-n" class="section level3">
-<h3>6c) Is the variance a biased or unbiased estimate of population variance? (DO NOT USE var, rather, use the original formula that divides by N)</h3>
-<pre class="r"><code>n_experiments &lt;- 1000 
-n_samples &lt;- c(1:15)
-var_uncorrected_of_sample_n &lt;- c()
-
-for (this_sample_n in n_samples) { 
-  this_sample_var_uncorrected &lt;- c() 
-  for (i in 1:n_experiments) {
-    iq_sample &lt;- rnorm(n=this_sample_n, mean=100, sd=15)
-    this_sample_var_uncorrected[i] &lt;- sum((iq_sample-mean(iq_sample))^2)/(length(iq_sample))
-    }
-  var_uncorrected_of_sample_n[this_sample_n] &lt;- mean(this_sample_var_uncorrected)
-}
-
-
-
-results_var &lt;- data.frame(n=n_samples, vars=var_uncorrected_of_sample_n)
-
- ggplot(results_var, aes(x=n, y=vars))+
-  geom_line(color=&#39;red&#39;) + 
-  geom_point() +
-  geom_hline(yintercept = 15*15) </code></pre>
-<p><img src="Assignment5_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>You might want to use an R Markdown file to answer those questions.</p>
-</div>
-</div>
+<div id="explain-why-the-standard-deviation-of-the-sampling-distribution-of-mean-gets-smaller-as-sample-size-increases." class="section level1">
+<h1>2) Explain why the standard deviation of the sampling distribution of mean gets smaller as sample size increases.</h1>
+<p>• Make a simulation that shows how the SEM form a sample changes as you change the standard deviation of the population (modify the code above; do not change other parameters). • Let’s say I know that my estimate of a given mean is very close to 50 and the standard deviation is 20 (based on previous studies). Make a simulation that shows me how the SEM changes as a function of sample size (go from 1 to 100). • In the confidence interval simulations, what happens if you sample from a very small sample sizes? (change sample_size to some small number like 2 and re-run those two cells without changing anything – what do you notice in the plot? You don’t need to paste the code, just re-run the code multiple times)</p>
 </div>
 
 

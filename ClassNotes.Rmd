@@ -489,7 +489,7 @@ binomialresults <- rbinom(5,1, 0.5)
   #5=number of flips, 1=number of coins, 0.5=probaility of getting heads
 
 mean(binomialresults)
-  #the more times you repeat it (the larger the x) the closer you will   get to 0.5
+  #the more times you repeat it (the larger the x) the closer you will get to 0.5
 
 ```
 
@@ -741,6 +741,89 @@ ggplot(results, aes(x=n, y=sds))+
   geom_point()+
   geom_hline(yintercept = 15) +
   ylim(c(-1,17))
+
+```
+
+
+#October 31: Hypothesis testing 
+
+##You see a 6% increase in performance after the intervention: is this due to chance? Here we simulate the probability that it is only due to chance
+```{r}
+mean_differnces <- c() 
+sample_size <- 100
+n_exps <- 1000 
+pop_mean <- 70
+pop_sd <- 20
+
+for (i in 1:n_exps){
+group_experimental <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
+mean_differnces[i] <- mean(group_experimental) -mean(group_control)
+}
+
+hist(mean_differnces, breaks=20)
+
+
+pnorm(q=6, mean=mean(mean_differnces), sd = sd(mean_differnces), lower.tail = FALSE) + pnorm(q=-6, mean=mean(mean_differnces), sd = sd(mean_differnces), lower.tail = TRUE)
+
+```
+
+
+##The randomization test 
+```{r}
+mean_differnces <- c() 
+sample_size <- 20
+n_exps <- 1000 
+pop_mean <- 70
+pop_sd <- 20
+
+group_exp <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_ctl <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
+group_both <- c(group_exp, group_ctl)
+group_assignments <- rep(c("a", "b"), each=sample_size)
+
+
+sample(group_assignments) #shuffles the group assignments 
+
+for (i in 1:n_exps) {
+  shuffled_grp_assignments <- sample(group_assignments)
+  group_exp_shuffled <- group_both[shuffled_grp_assignments=="a"]
+  group_ctl_shuffled <- group_both[shuffled_grp_assignments=="b"]
+  mean_differnces[i] <- mean(group_exp_shuffled) -mean(group_ctl)
+}
+
+hist(mean_differnces, breaks = 20)
+
+quantile(mean_differnces, c(0.025, 0.975))
+
+```
+
+##Randomization test with uniform
+```{r}
+mean_differnces <- c() 
+sample_size <- 20
+n_exps <- 1000 
+pop_mean <- 70
+pop_sd <- 20
+
+group_exp <- runif(n=sample_size, min=50, max=100) 
+group_ctl <- runif(n=sample_size, min=50, max=100) 
+group_both <- c(group_exp, group_ctl)
+group_assignments <- rep(c("a", "b"), each=sample_size)
+
+
+sample(group_assignments) #shuffles the group assignments 
+
+for (i in 1:n_exps) {
+  shuffled_grp_assignments <- sample(group_assignments)
+  group_exp_shuffled <- group_both[shuffled_grp_assignments=="a"]
+  group_ctl_shuffled <- group_both[shuffled_grp_assignments=="b"]
+  mean_differnces[i] <- mean(group_exp_shuffled) -mean(group_ctl)
+}
+
+hist(mean_differnces, breaks = 20)
+
+quantile(mean_differnces, c(0.025, 0.975))
 
 ```
 

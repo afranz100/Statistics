@@ -1,0 +1,116 @@
+---
+title: "Assignment 6"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+#1) Explain the concept of sampling error.
+Generally, a researcher is never able to get every person from the population they are studying. For example if a scientist is looking at how effective a learning technique is for third graders, they are never going to be able to test all third graders and get the answer. Instead, they will sample a smaller selection of third graders in order to estimate the values that one would find for all third graders. The difference between the actual population values for the mean, median, mode etc. and the values obtained from the sample is the sampling error. 
+
+
+#2) Explain why the standard deviation of the sampling distribution of mean gets smaller as sample size increases.
+The larger the sample size, the closer the sample estimates get to the actual population statistics. For example, the more third graders you have in your sample, the closer your sample mean will get to the actual mean for all third graders. Therefore as the sample size increases the spread of the sample means gets smaller because you are getting closer and closer to the actual mean. The standard deviation is a measure of spread and gets smaller because your value is getting closer and closer to the actual value in the population. 
+
+#3) Make a simulation that shows how the SEM from a sample changes as you change the standard deviation of the population (modify the code above; do not change other parameters).
+```{r}
+
+population_mean <- 100
+population_std <- 7
+n_experiments <- 1000 # we will sample 1000 times
+sample_size <- 1:100 # how many elements we want to sample?
+mean_of_sems_sampled <- c()
+
+for (this_sample_size in sample_size) {
+  sample_sems_true <- c() 
+  sample_sems_sampled <- c()
+
+for (i in 1:n_experiments) {
+this_sample <- rnorm(n=this_sample_size, mean=population_mean, sd=population_std) 
+sample_sems_sampled[i] <- sd(this_sample)/sqrt(this_sample_size)
+}
+  mean_of_sems_sampled[this_sample_size] <-mean(sample_sems_sampled)
+}
+my_df <- data.frame(sample_size, 
+                mean_of_sems_sampled)
+
+library(ggpubr)
+library(ggplot2)
+
+
+ggplot(my_df, aes(x=sample_size)) +
+  geom_line(aes( y=mean_of_sems_sampled), color='black') + 
+  geom_hline(yintercept = 0)
+
+```
+
+
+#4) Let’s say I know that my estimate of a given mean is very close to 50 and the standard deviation is 20 (based on previous studies). Make a simulation that shows me how the SEM changes as a function of sample size (go from 1 to 100).
+```{r}
+
+population_mean <- 50
+population_std <- 20
+n_experiments <- 1000 # we will sample 1000 times
+sample_size <- 1:100 # how many elements we want to sample?
+mean_of_sems_sampled <- c()
+
+for (this_sample_size in sample_size) {
+  sample_sems_true <- c() 
+  sample_sems_sampled <- c()
+
+for (i in 1:n_experiments) {
+this_sample <- rnorm(n=this_sample_size, mean=population_mean, sd=population_std) 
+sample_sems_sampled[i] <- sd(this_sample)/sqrt(this_sample_size)
+}
+  mean_of_sems_sampled[this_sample_size] <-mean(sample_sems_sampled)
+}
+my_df <- data.frame(sample_size, 
+                mean_of_sems_sampled)
+
+library(ggpubr)
+library(ggplot2)
+
+
+ggplot(my_df, aes(x=sample_size)) +
+  geom_line(aes( y=mean_of_sems_sampled), color='black') + 
+  geom_hline(yintercept = 0)
+
+```
+
+
+#5) In the confidence interval simulations, what happens if you sample from a very small sample sizes? (change sample_size to some small number like 2 and re-run those two cells without changing anything – what do you notice in the plot? You don’t need to paste the code, just re-run the code multiple times)
+The smaller the sample size, the more variability around the mean you see. When my sample size is 2, there were many confidence intervals that did not include the actual mean. However, when the sample size is larger more of the intervals include the actual population mean, making the graph more centered around the mean. 
+```{r}
+library(ggplot2)
+sample_means <- c()
+sample_sds <- c() 
+sample_size <- 2
+
+n_experiments <- 100
+for (i in 1:n_experiments) {
+sample_n <- rnorm(n=sample_size, mean=100, sd=15) 
+sample_means[i] <- mean(sample_n)
+sample_sds[i] <- sd(sample_n)
+}
+SEM <- sample_sds/sqrt(sample_size) 
+sample_upper_limit <- sample_means + 1 * SEM 
+sample_lower_limit <- sample_means - 1 * SEM
+
+
+my_df<- data.frame(n=1:n_experiments, means=sample_means,
+                   lower_limit=sample_lower_limit,
+                    upper_limit=sample_upper_limit) 
+
+ggplot(my_df, aes(x=n, y=means))+
+geom_segment(aes(y=lower_limit, yend=upper_limit, x=n, xend=n))+ geom_point(color='red') +
+geom_point(aes(y=lower_limit)) +
+geom_point(aes(y=upper_limit)) +
+geom_hline(yintercept = 100)
+
+```
+

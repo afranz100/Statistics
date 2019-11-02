@@ -1,0 +1,186 @@
+---
+title: "Exam 3"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#1) If 12 biased coins (P=.65) are flipped once. What is the probability of getting exactly 10 heads?
+```{r}
+
+dbinom(x=10, size = 12, prob=0.65)
+
+```
+
+#2) If 12 biased coins (P=.65) are flipped once. What is the probability of getting AT LEAST 10 heads?
+```{r}
+
+pbinom(q=9, size = 12, prob = 0.65, lower.tail = FALSE)
+
+```
+
+
+Your friend is a big Starbucks fan and he claims that no other coffee even comes close to Starbucks coffee. You suspect he is being a little grandiose. In fact, you wonder whether he can even taste the difference between Starbucks and the local roaster's coffee. Your friend agrees to the following experiment: 
+While blindfolded, he is given 6 opportunities to taste from two cups of coffee and tell you which of the two is coming from Starbucks. The cups are identical and contain the same type of coffee except that one contains coffee made from beans supplied and roasted by Starbucks and the other by the local roaster.
+After each tasting of the two cups, you remove any telltale signs and randomize which of the two cups is given first for the next trial. 
+Believe it or not, your friend correctly identifies Starbucks on all 6 trials! 
+#3) Calculate the probability of that outcome and based on that probability what do you conclude about whether your friend can tell the difference or not? Please also give the R command that calculates the probability.
+```{r}
+
+pbinom(q=5, size = 6, prob = 0.5, lower.tail = FALSE)
+
+#Given that he has no ability to tell the difference between the coffees, he only has a 1.56% chance of guessing all 6 cups correctly. Therefore, if you are using an alpha level of 0.05, you would reject the hypothesis that his guesses were due to chance. 
+
+```
+
+#4) Using simulations, draw 1 to 1000 samples from a population with a mean of 50 and a standard deviation of 10. Calculate the mean of each sample, and make a plot that shows how that mean changes as you increase your sample size. 
+Based on that plot, is the mean a biased or an unbiased estimate of the population mean?
+```{r}
+
+n_experiments <- 100 
+n_samples <- c(1:1000)
+mean_of_sample_n <- c()
+
+for (this_sample_n in n_samples) { 
+  this_sample_mean <- c() 
+  for (i in 1:n_experiments) {
+    iq_sample <- rnorm(n=this_sample_n, mean=50, sd=10)
+    this_sample_mean[i] <- mean(iq_sample)
+    }
+  mean_of_sample_n[this_sample_n] <- mean(this_sample_mean)
+}
+
+results_mean <- data.frame(n=n_samples, means=mean_of_sample_n)
+
+library(ggplot2)
+
+ ggplot(results_mean, aes(x=n, y=means))+
+  geom_line(color='red') + 
+  geom_point() +
+  geom_hline(yintercept = 50)
+ 
+#The sample mean is an unbiased estimator of the population mean because it does not tend to always be higher or lower than the population mean. It appears to be equally above the population mean and equally below it.
+
+
+ 
+```
+
+#5) Using simulations, draw 1 to 1000 samples from a population with a mean of 50 and a standard deviation of 10. Calculate the standard deviation (i.e., `sd` or the uncorrected version -- does not matter which) of each sample and make a plot that shows how this standard deviation changes as you increase your sample size. 
+Based on that plot, is the standard deviation a biased or an unbiased estimate of the population standard deviation?
+```{r}
+n_experiments <- 100
+n_samples <- c(1:1000)
+sd_of_sample_n <- c()
+
+for (this_sample_n in n_samples) { 
+  this_sample_sd <- c() 
+  for (i in 1:n_experiments) {
+    iq_sample <- rnorm(n=this_sample_n, mean=50, sd=10)
+    this_sample_sd[i] <- sd(iq_sample)
+    }
+  sd_of_sample_n[this_sample_n] <- mean(this_sample_sd)
+}
+
+results_sd <- data.frame(n=n_samples, sds=sd_of_sample_n)
+
+library(ggplot2)
+
+ ggplot(results_sd, aes(x=n, y=sds))+
+  geom_line(color='red') + 
+  geom_point() +
+  geom_hline(yintercept = 10)
+ 
+#The sample standard deviation is always lower than the population standard deviation, so it is a biased estimater of the population standard deviation. 
+ 
+```
+
+
+
+#6) Using simulations from a population with a mean of 50 and a standard deviation of 10: draw a sample from that population of sizes 10 and 1000 and then calculate the 95% confidence interval of the mean for each sample size.
+Do you see the confidence intervals in the higher sample closer to the mean or further from the mean? And why do you think is that? (hint: look at the SEM formula).
+```{r}
+
+lower_z <- qnorm(p=0.025, mean=0, sd=1, lower.tail = TRUE) 
+upper_z <- qnorm(p=0.025, mean=0, sd=1, lower.tail = FALSE)
+
+sample_means <- c() 
+sample_sds <- c() 
+sample_size <- 10
+
+n_experiments <- 100
+
+for (i in 1:n_experiments) {
+sample_n <- rnorm(n=sample_size, mean=50, sd=10) 
+sample_means[i] <- mean(sample_n)
+sample_sds[i] <- sd(sample_n)
+}
+
+SEM <- sample_sds/sqrt(sample_size) 
+
+sample_upper_limit <- sample_means + upper_z * SEM 
+sample_lower_limit <- sample_means + lower_z * SEM
+
+
+my_df<- data.frame(n=1:n_experiments,
+                   means=sample_means,
+                   lower_limit=sample_lower_limit,
+                    upper_limit=sample_upper_limit) 
+
+library(ggplot2)
+
+ggplot(my_df, aes(x=n, y=means))+
+  geom_segment(aes(y=lower_limit, yend=upper_limit, x=n, xend=n))+ 
+  geom_point(color='red') +
+  geom_point(aes(y=lower_limit)) +
+  geom_point(aes(y=upper_limit)) +
+  geom_hline(yintercept = 50)
+
+##sample size
+
+lower_z <- qnorm(p=0.025, mean=0, sd=1, lower.tail = TRUE) 
+upper_z <- qnorm(p=0.025, mean=0, sd=1, lower.tail = FALSE)
+
+sample_means <- c() 
+sample_sds <- c() 
+sample_size <- 100
+
+n_experiments <- 100
+
+for (i in 1:n_experiments) {
+sample_n <- rnorm(n=sample_size, mean=50, sd=10) 
+sample_means[i] <- mean(sample_n)
+sample_sds[i] <- sd(sample_n)
+}
+
+SEM <- sample_sds/sqrt(sample_size) 
+
+sample_upper_limit <- sample_means + upper_z * SEM 
+sample_lower_limit <- sample_means + lower_z * SEM
+
+
+my_df<- data.frame(n=1:n_experiments,
+                   means=sample_means,
+                   lower_limit=sample_lower_limit,
+                    upper_limit=sample_upper_limit) 
+
+library(ggplot2)
+
+ggplot(my_df, aes(x=n, y=means))+
+  geom_segment(aes(y=lower_limit, yend=upper_limit, x=n, xend=n))+ 
+  geom_point(color='red') +
+  geom_point(aes(y=lower_limit)) +
+  geom_point(aes(y=upper_limit)) +
+  geom_hline(yintercept = 50)
+
+
+```
+
