@@ -13,22 +13,59 @@ Make a simulation of two groups (N=10 per group) drawn from the same population 
 
 #1) Use the CLT to find the probability of observing a difference of 4 or more between the two groups (either positive or negative), by chance.
 ```{r}
+mean_differnces <- c() 
+sample_size <- 10
+n_exps <- 1000 
+pop_mean <- 40
+pop_sd <- 10
+
+for (i in 1:n_exps){
+group_experimental <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+mean_experimental <- mean(group_experimental)
+mean_control <- mean(group_control)
+mean_diff <- mean_experimental- mean_control
+  mean_differnces[i] <- mean_diff
+}
+
+mean(mean_differnces > 4 | mean_differnces < -4)
 
 ```
+
 
 #2) Calculate the same probability using the randomization test.
 ```{r}
+sample_size <- 10
+n_exps <- 1000
+pop_mean <- 40
+pop_sd <- 10
+group_experimental <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_score_both <- c(group_experimental, group_control) 
+group_assignments <- rep(c("A","B"), each=10)
+
+
+mean_differnces <- c()
+for (i in 1:n_exps){
+shuffled_assignments <- sample(group_assignments, replace=FALSE)  
+group_experimental_shuffled <- group_score_both[shuffled_assignments=='A'] 
+group_control_shuffled <- group_score_both[shuffled_assignments=='B']
+mean_experimental <- mean(group_experimental_shuffled)
+mean_control <- mean(group_control_shuffled)
+mean_diff <- mean_experimental- mean_control
+  mean_differnces[i] <- mean_diff
+}
+
+
+mean(mean_differnces > 4 | mean_differnces < -4)
 
 ```
+
 
 #3) Given the similarity of the two probabilities, what is the biggest advantage of using the randomization test?
-```{r}
-
-```
+The randomization test does not make any assumptions about the distributions of the data, while the CLT method makes the assumption of normality. 
 
 #4) While keeping everything else fixed, what happens to those probabilities if we increase the number of subjects (N) from 10 to 1000 – and why? (no need to provide the code, just write what happens and the reason you think behind this effect)
-```{r}
-
-```
+When we increase the N from 10 to 1000, you are less likley to have random differences between the control and the experimental group. Because they are randomly selected from the same distribution with the same mean and standard deviation, the more samples you have the more the two groups reflect their similarity and their differences come closer to zero. 
 
 

@@ -1,0 +1,84 @@
+---
+title: "Assignment 8"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+
+#Modify the simulation above (and figures) to answer the following questions:
+
+##1) What is the relationship between alpha and power? (note: use those values for alpha: alphas <- c(0.5,0.1,0.05,0.01,0.001,0.0001))
+As alpha increases, power increases. 
+```{r}
+power_vs_alpha_size <- c()
+alphas <- c(0.5,0.1,0.05,0.01,0.001,0.0001)
+
+
+for (alpha_ind in 1:length(alphas)) {
+  this_alpha <- alphas[alpha_ind]
+  sample_size <- 20
+  pop_mean <- 70
+  pop_sd <- 20
+  effect_size <- 10
+  n_runs <- 100
+  significance <- c()
+  for (run in 1:n_runs) {
+    grp_experimental <- rnorm(n=sample_size, mean=pop_mean+effect_size, sd=pop_sd)
+    grp_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
+    pvalue <- t.test(x=grp_experimental, y=grp_control)$p.value
+    significance[run] <- pvalue 
+  }
+power_vs_alpha_size[alpha_ind] <- mean(significance < this_alpha)
+}
+
+library(ggplot2)
+my_df <- data.frame(alpha=alphas, power=power_vs_alpha_size)
+
+ggplot(my_df, aes(x=alpha, y=power))+
+  geom_line()+
+  geom_point()
+
+```
+
+##2) What is the relationship between the standard deviation and power?
+As standard deviation increases, power decreases. 
+```{r}
+power_vs_sd_size <- c()
+pop_sd <- seq(1,50,5)
+
+for (sd_size_ind in 1:length(pop_sd)) {
+  this_sd_size <- pop_sd[sd_size_ind]
+  sample_size <- 20
+  pop_mean <- 70
+  effect_size <- 10
+  alpha <- 0.05
+  n_runs <- 100
+  significance <- c()
+  for (run in 1:n_runs) {
+    grp_experimental <- rnorm(n=sample_size, mean=pop_mean+effect_size, sd=this_sd_size)
+    grp_control <- rnorm(n=sample_size, mean=pop_mean, sd=this_sd_size)
+    pvalue <- t.test(x=grp_experimental, y=grp_control)$p.value
+    significance[run] <- pvalue 
+  }
+power_vs_sd_size[sd_size_ind] <- mean(significance < alpha)
+}
+
+library(ggplot2)
+my_df <- data.frame(sd=pop_sd, power=power_vs_sd_size)
+
+ggplot(my_df, aes(x=sd, y=power))+
+  geom_line()+
+  geom_point()
+
+```
+

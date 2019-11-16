@@ -1,0 +1,163 @@
+---
+title: "Assignment 9"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#Use simulations to determine the effect of the following on the t-value (from an independent sample t-test): 
+
+##The sample size
+```{r}
+sample_1_std <- 20
+sample_2_std <- 20
+sample_1_mean <- 70
+sample_2_mean <- 75
+ts_vs_size <- c() 
+n_exps <- 100
+sample_size_vector <- c(2:200)
+for (ind in 1:length(sample_size_vector)){
+  sample_sizes <- sample_size_vector[ind] 
+  t_values <- c()
+  for (t_ind in 1:n_exps){
+    sample_1_scores <- rnorm(n=sample_sizes, mean=sample_1_mean, sd=sample_1_std)
+    sample_2_scores <- rnorm(n=sample_sizes, mean=sample_2_mean, sd=sample_1_std)
+    t_values[t_ind] <- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+    }
+  ts_vs_size[ind] <- mean(t_values)
+}
+
+
+library(ggplot2)
+
+my_data <- data.frame(value=ts_vs_size, size=sample_size_vector)
+
+ggplot(my_data, aes(x=size, y=value)) +
+  geom_point()+ 
+  geom_line()
+
+```
+
+
+##The standard deviations of the estimates
+```{r}
+
+sample_size <- 20
+sample_1_mean <- 70
+sample_2_mean <- 75
+ts_vs_std <- c() 
+n_exps <- 100
+sample_std_vector <- c(2:20)
+for (ind in 1:length(sample_std_vector)){
+  sample_std <- sample_std_vector[ind] 
+  ts <- c()
+  for (t_ind in 1:n_exps){
+    sample_1_scores <- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_std)
+    sample_2_scores <- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_std)
+    ts[t_ind] <- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+    }
+  ts_vs_std[ind] <- mean(ts) 
+}
+
+
+library(ggplot2)
+
+my_data <- data.frame(value=ts_vs_std, std=sample_std_vector)
+
+ggplot(my_data, aes(x=std, y=value)) +
+  geom_point()+ 
+  geom_line()
+
+```
+
+
+##The effect size
+```{r}
+
+sample_size <- 20
+sample_1_mean <- 70
+sample_2_mean <- 70
+sample_1_std <- 20
+sample_2_std <- 20
+ts_vs_ef <- c() 
+n_exps <- 100
+sample_es_vector <- c(2:100)
+for (ind in 1:length(sample_es_vector)){
+  sample_effect <- sample_es_vector[ind] 
+  ts <- c()
+  for (t_ind in 1:n_exps){
+    sample_1_scores <- rnorm(n=sample_size, mean=sample_1_mean+sample_effect, sd=sample_1_std)
+    sample_2_scores <- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+    ts[t_ind] <- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+  }
+  ts_vs_ef[ind] <- mean(ts) 
+}
+
+
+library(ggplot2)
+
+my_data <- data.frame(value=ts_vs_ef, effect=sample_es_vector)
+
+ggplot(my_data, aes(x=effect, y=value)) +
+  geom_point()+ 
+  geom_line()
+
+```
+
+#Use the same sample size and standard deviation for both groups. Which of those seem to increase the t-value?
+A larger sample size increases the absolute value of the t-value because you are increasing the amplification of the effect size. The larger the standard deviation decreases the absolute value of the t-value because the error is increased. 
+```{r}
+#Large sample size, small sd
+sample_size <- 100
+sample_1_mean <- 70
+sample_2_mean <- 75
+sample_1_std <- 10
+sample_2_std <- 10
+sample_1_scores <- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores <- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+
+
+#Large sample size, big sd
+sample_size <- 100
+sample_1_mean <- 70
+sample_2_mean <- 75
+sample_1_std <- 30
+sample_2_std <- 30
+sample_1_scores <- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores <- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+
+
+#Small sample size, small sd
+sample_size <- 20
+sample_1_mean <- 70
+sample_2_mean <- 75
+sample_1_std <- 10
+sample_2_std <- 10
+sample_1_scores <- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores <- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+
+
+#Small sample size, big sd
+sample_size <- 20
+sample_1_mean <- 70
+sample_2_mean <- 75
+sample_1_std <- 30
+sample_2_std <- 30
+sample_1_scores <- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores <- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+
+```
+

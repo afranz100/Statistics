@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Assignment 9</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Statistics Practicum</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="ClassNotes.html">Class Notes</a>
+</li>
+<li>
+  <a href="Assignment1.html">Assignment 1</a>
+</li>
+<li>
+  <a href="Assignment2.html">Assignment 2</a>
+</li>
+<li>
+  <a href="Assignment3.html">Assignment 3</a>
+</li>
+<li>
+  <a href="Assignment4.html">Assignment 4</a>
+</li>
+<li>
+  <a href="Assignment5.html">Assignment 5</a>
+</li>
+<li>
+  <a href="Assignment6.html">Assignment 6</a>
+</li>
+<li>
+  <a href="Assignment7.html">Assignment 7</a>
+</li>
+<li>
+  <a href="Assignment8.html">Assignment 8</a>
+</li>
+<li>
+  <a href="Assignment9.html">Assignment 9</a>
+</li>
+<li>
+  <a href="Exam1.html">Exam 1</a>
+</li>
+<li>
+  <a href="Exam2.html">Exam 2</a>
+</li>
+<li>
+  <a href="Exam3.html">Exam 3</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Assignment 9</h1>
+
+</div>
+
+
+<div id="use-simulations-to-determine-the-effect-of-the-following-on-the-t-value-from-an-independent-sample-t-test" class="section level1">
+<h1>Use simulations to determine the effect of the following on the t-value (from an independent sample t-test):</h1>
+<div id="the-sample-size" class="section level2">
+<h2>The sample size</h2>
+<pre class="r"><code>sample_1_std &lt;- 20
+sample_2_std &lt;- 20
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 75
+ts_vs_size &lt;- c() 
+n_exps &lt;- 100
+sample_size_vector &lt;- c(2:200)
+for (ind in 1:length(sample_size_vector)){
+  sample_sizes &lt;- sample_size_vector[ind] 
+  t_values &lt;- c()
+  for (t_ind in 1:n_exps){
+    sample_1_scores &lt;- rnorm(n=sample_sizes, mean=sample_1_mean, sd=sample_1_std)
+    sample_2_scores &lt;- rnorm(n=sample_sizes, mean=sample_2_mean, sd=sample_1_std)
+    t_values[t_ind] &lt;- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+    }
+  ts_vs_size[ind] &lt;- mean(t_values)
+}
+
+
+library(ggplot2)
+
+my_data &lt;- data.frame(value=ts_vs_size, size=sample_size_vector)
+
+ggplot(my_data, aes(x=size, y=value)) +
+  geom_point()+ 
+  geom_line()</code></pre>
+<p><img src="Assignment9_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="the-standard-deviations-of-the-estimates" class="section level2">
+<h2>The standard deviations of the estimates</h2>
+<pre class="r"><code>sample_size &lt;- 20
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 75
+ts_vs_std &lt;- c() 
+n_exps &lt;- 100
+sample_std_vector &lt;- c(2:20)
+for (ind in 1:length(sample_std_vector)){
+  sample_std &lt;- sample_std_vector[ind] 
+  ts &lt;- c()
+  for (t_ind in 1:n_exps){
+    sample_1_scores &lt;- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_std)
+    sample_2_scores &lt;- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_std)
+    ts[t_ind] &lt;- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+    }
+  ts_vs_std[ind] &lt;- mean(ts) 
+}
+
+
+library(ggplot2)
+
+my_data &lt;- data.frame(value=ts_vs_std, std=sample_std_vector)
+
+ggplot(my_data, aes(x=std, y=value)) +
+  geom_point()+ 
+  geom_line()</code></pre>
+<p><img src="Assignment9_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="the-effect-size" class="section level2">
+<h2>The effect size</h2>
+<pre class="r"><code>sample_size &lt;- 20
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 70
+sample_1_std &lt;- 20
+sample_2_std &lt;- 20
+ts_vs_ef &lt;- c() 
+n_exps &lt;- 100
+sample_es_vector &lt;- c(2:100)
+for (ind in 1:length(sample_es_vector)){
+  sample_effect &lt;- sample_es_vector[ind] 
+  ts &lt;- c()
+  for (t_ind in 1:n_exps){
+    sample_1_scores &lt;- rnorm(n=sample_size, mean=sample_1_mean+sample_effect, sd=sample_1_std)
+    sample_2_scores &lt;- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+    ts[t_ind] &lt;- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic
+  }
+  ts_vs_ef[ind] &lt;- mean(ts) 
+}
+
+
+library(ggplot2)
+
+my_data &lt;- data.frame(value=ts_vs_ef, effect=sample_es_vector)
+
+ggplot(my_data, aes(x=effect, y=value)) +
+  geom_point()+ 
+  geom_line()</code></pre>
+<p><img src="Assignment9_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+</div>
+<div id="use-the-same-sample-size-and-standard-deviation-for-both-groups.-which-of-those-seem-to-increase-the-t-value" class="section level1">
+<h1>Use the same sample size and standard deviation for both groups. Which of those seem to increase the t-value?</h1>
+<p>A larger sample size increases the absolute value of the t-value because you are increasing the amplification of the effect size. The larger the standard deviation decreases the absolute value of the t-value because the error is increased.</p>
+<pre class="r"><code>#Large sample size, small sd
+sample_size &lt;- 100
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 75
+sample_1_std &lt;- 10
+sample_2_std &lt;- 10
+sample_1_scores &lt;- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores &lt;- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic</code></pre>
+<pre><code>##         t 
+## -3.890523</code></pre>
+<pre class="r"><code>#Large sample size, big sd
+sample_size &lt;- 100
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 75
+sample_1_std &lt;- 30
+sample_2_std &lt;- 30
+sample_1_scores &lt;- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores &lt;- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic</code></pre>
+<pre><code>##         t 
+## -2.685502</code></pre>
+<pre class="r"><code>#Small sample size, small sd
+sample_size &lt;- 20
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 75
+sample_1_std &lt;- 10
+sample_2_std &lt;- 10
+sample_1_scores &lt;- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores &lt;- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic</code></pre>
+<pre><code>##           t 
+## -0.06500694</code></pre>
+<pre class="r"><code>#Small sample size, big sd
+sample_size &lt;- 20
+sample_1_mean &lt;- 70
+sample_2_mean &lt;- 75
+sample_1_std &lt;- 30
+sample_2_std &lt;- 30
+sample_1_scores &lt;- rnorm(n=sample_size, mean=sample_1_mean, sd=sample_1_std)
+sample_2_scores &lt;- rnorm(n=sample_size, mean=sample_2_mean, sd=sample_2_std)
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)$statistic</code></pre>
+<pre><code>##         t 
+## -1.264033</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

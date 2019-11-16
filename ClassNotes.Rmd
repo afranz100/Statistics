@@ -758,7 +758,7 @@ pop_sd <- 20
 for (i in 1:n_exps){
 group_experimental <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
 group_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
-mean_differnces[i] <- mean(group_experimental) -mean(group_control)
+mean_differnces[i] <- mean(group_experimental) - mean(group_control)
 }
 
 hist(mean_differnces, breaks=20)
@@ -824,6 +824,208 @@ for (i in 1:n_exps) {
 hist(mean_differnces, breaks = 20)
 
 quantile(mean_differnces, c(0.025, 0.975))
+
+```
+
+
+#November 7th: Statistical Power
+-Power: the ability of the experiment to detect an effect that is actually there. 
+-Type I: you say there is an effect when there is no effect 
+-Type II: you say there is no effect when there is an effect 
+-Increasing alpha (type I), increases your statistical power. 
+```{r}
+
+sample_size <- 20
+effect_size <- 10
+pop_mean <- 70
+pop_sd <- 20
+alpha <- 0.05
+n_runs <- 100
+significance <- c()
+
+for (run in 1:n_runs) {
+  grp_experimental <- rnorm(n=sample_size, mean=pop_mean+effect_size, sd=pop_sd)
+  grp_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
+  pvalue <- t.test(x=grp_experimental, y=grp_control)$p.value
+  significance[run] <- pvalue 
+}
+
+mean(significance < alpha)
+
+```
+
+##Statistical power varying with sample size 
+```{r}
+power_vs_sample_size <- c()
+sample_size <- seq(2,200,10)
+
+for (sample_size_ind in 1:length(sample_size)){
+  this_sample_size <- sample_size[sample_size_ind]
+  effect_size <- 10
+  pop_mean <- 70
+  pop_sd <- 20
+  alpha <- 0.05
+  n_runs <- 100
+  significance <- c()
+  for (run in 1:n_runs) {
+    grp_experimental <- rnorm(n=this_sample_size, mean=pop_mean+effect_size, sd=pop_sd)
+    grp_control <-      rnorm(n=this_sample_size, mean=pop_mean, sd=pop_sd)
+    pvalue <- t.test(x=grp_experimental, y=grp_control)$p.value
+    significance[run] <- pvalue 
+  }
+power_vs_sample_size[sample_size_ind] <- mean(significance < alpha)
+}
+
+library(ggplot2)
+my_df <- data.frame(n=sample_size, power=power_vs_sample_size)
+
+ggplot(my_df, aes(x=n, y=power))+
+  geom_line()+
+  geom_point()
+
+
+```
+
+
+##You are limited by an N or 20. Only option is ti manipulate effect size/variance
+```{r}
+power_vs_effect_size <- c()
+effect_size <- seq(1,50,1)
+
+for (effect_size_ind in 1:length(effect_size)) {
+  this_effect_size <- effect_size[effect_size_ind]
+  sample_size <- 20
+  pop_mean <- 70
+  pop_sd <- 20
+  alpha <- 0.05
+  n_runs <- 100
+  significance <- c()
+  for (run in 1:n_runs) {
+    grp_experimental <- rnorm(n=sample_size, mean=pop_mean+this_effect_size, sd=pop_sd)
+    grp_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
+    pvalue <- t.test(x=grp_experimental, y=grp_control)$p.value
+    significance[run] <- pvalue 
+  }
+power_vs_effect_size[effect_size_ind] <- mean(significance < alpha)
+}
+
+library(ggplot2)
+my_df <- data.frame(effect_size=effect_size, power=power_vs_effect_size)
+
+ggplot(my_df, aes(x=effect_size, y=power))+
+  geom_line()+
+  geom_point()
+
+```
+
+#November 14th: t-tests
+
+##One sample t-test: does my group come from a given population mean? 
+```{r}
+pop_mean <- 70
+sample_mean <- 75
+sample_sd <- 20
+sample_size <- 20
+sample_scores <- rnorm(n=sample_size, mean=sample_mean, sd= sample_sd)
+
+t.test(sample_scores, mu=pop_mean)
+
+
+measure_of_effect <- mean(sample_scores) - pop_mean
+measure_of_error <- sd(sample_scores) / sqrt(sample_size)
+measure_of_effect / measure_of_error
+
+```
+
+##Independent t-test
+```{r}
+sample_1_scores <- rnorm(n=sample_size, mean=sample_mean, sd=sample_sd)
+sample_2_scores <- rnorm(n=sample_size, mean=sample_mean+10, sd=sample_sd)
+
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE)
+
+```
+
+##Dependent/paired t-test
+```{r}
+sample_1_scores_t1 <- rnorm(n=sample_size, mean=sample_mean, sd=sample_sd)
+sample_1_scores_t2 <- rnorm(n=sample_size, mean=sample_mean+10, sd=sample_sd)
+
+t.test(sample_1_scores, sample_2_scores, var.equal = TRUE, paired = TRUE)
+
+#Pulling out a value from the t-test result 
+
+result <- t.test(sample_1_scores, sample_2_scores, var.equal = TRUE, paired = TRUE)
+
+result$p.value
+
+```
+
+
+##Simulating the t-distribution
+```{r}
+ts <- c()
+sample_size <- 10
+for (i in 1:1000){
+  ts[i] <- t.test(rnorm(n=sample_size),
+                 rnorm(n=sample_size))$statistic
+}
+
+library(ggplot2)
+
+ggplot(data.frame(values=ts), aes(x=values))+
+  geom_density()
+
+mean(ts < -2 | ts > 2)
+
+df_vector <- c(3,1000)
+
+ts <- c()
+n_sims <- 1000
+for (d in 1:length(df_vector)){
+  df <- df_vector[d]
+  sample_size <- df + 1
+  for (i in 1:n_sims){
+    ts <- c(ts, t.test(rnorm(n=sample_size),
+                       rnorm(n=sample_size))$statistic)
+  }
+}
+
+my_df <- data.frame(values=ts,
+                    dof=as.factor(rep(df_vector, each=n_sims)))
+ggplot(my_df, aes(x=values, color=dof))+
+  geom_density(size=2)
+
+
+
+```
+
+
+##Simulating how standard deviation changes with t statistic 
+```{r}
+
+
+library(ggplot2)
+my_df <- data.frame(values=ts_vs_sd,
+                    sd=sample_sd_vector)
+
+ggplot()
+```
+
+
+##Simulating how sample size changes with t statistic 
+```{r}
+ts_vs_n <- c()
+pop_mean <- 70
+sample_size_vector <- 2:100
+sample_mean <- 74
+sample_sd <- 20
+n_exps <- 100
+sample_sd_vector <- 2:20
+for (ind in 1:length(sample_size_vector)){
+  sample_size <- sample_size_vector[ind]
+  
+}
 
 ```
 
