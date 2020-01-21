@@ -30,5 +30,7 @@ navbar:
       href: Exam2.html
     - text: "Exam 3"
       href: Exam3.html
+    - text: "Final Project"
+      href: FinalProject.html
 output_dir: "docs"
 

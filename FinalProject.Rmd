@@ -1,0 +1,370 @@
+---
+title: "Final Project"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    collapsed: false
+    number_sections: false
+    toc_depth: 1
+    #code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
+```
+
+#Loading the data
+```{r}
+
+school_data<- read.csv('/Users/AnaFranz/Downloads/2018-2019_School_Demographic_Snapshot.csv')
+
+?read.csv
+
+
+
+library(tidyverse)
+school_data <- read_csv('~/Downloads/2018-2019_School_Demographic_Snapshot.csv')
+
+  
+  
+  
+```
+
+
+#What was the school with the highest total enrollement in 2018-19 year?
+```{r}
+library(dplyr)
+# convert year to a number by keeping only first 4 charachters in the year string 
+school_data$Year <- substr(school_data$Year, 1, 4)
+school_data$Year <- as.numeric(school_data$Year)
+
+# read a single column
+school_data$`Total Enrollment`
+
+  average_enrollement_2018 <- school_data %>%
+    filter(Year=='2018') %>%
+    select(`School Name`, Year, `Total Enrollment`) %>%
+    arrange(`Total Enrollment`) %>%
+    top_n(10)
+  
+  average_enrollement_2014 <- school_data %>%
+    filter(Year=='2014') %>%
+    select(`School Name`, Year, `Total Enrollment`) %>%
+    arrange(`Total Enrollment`) %>%
+    top_n(10)
+  
+  average_enrollement_2015 <- school_data %>%
+    filter(Year=='2015') %>%
+    select(`School Name`, Year, `Total Enrollment`) %>%
+    arrange(`Total Enrollment`) %>%
+    top_n(10)
+  
+  
+  
+```
+
+
+#Which schools do not have a high school?
+```{r}
+
+ nohighschool <- school_data %>%
+    filter(`Grade 9`==0 & `Grade 10`==0 & `Grade 11` ==0 & `Grade 12`==0) %>%
+    select(`School Name`) %>%
+    distinct()
+    
+```
+
+#Correlation between % in poverty and % of minitories (black and hispanic) present at school
+```{r}
+school_data$`% Hispanic` <- substr(school_data$`% Hispanic`, 1, 4)
+school_data$`% Hispanic` <- as.numeric(school_data$`% Hispanic`)
+
+minoritieshisp <- school_data$`% Hispanic`
+
+school_data$`% Black` <- substr(school_data$`% Black`, 1, 4)
+school_data$`% Black` <- as.numeric(school_data$`% Black`)
+
+minoritiesblk <- school_data$`% Black`
+
+school_data$`% Poverty` <- substr(school_data$`% Poverty`, 1, 4)
+school_data$`% Poverty` <- as.numeric(school_data$`% Poverty`)
+
+poverty <- school_data$`% Poverty`
+
+cor(poverty, minoritieshisp)
+
+cor(poverty, minoritiesblk)
+
+library(dplyr)
+
+minorities <- school_data %>%
+  filter(Year=='2018') %>%
+  select(`School Name`, `Economic Need Index`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(`% Minorities`) %>%
+  select(`School Name`, `% Minorities`,`Economic Need Index`)
+
+percentminorities <- minorities$`% Minorities`
+economicneedindex <- minorities$`Economic Need Index`
+
+cor( percentminorities, economicneedindex)
+
+library(ggplot2)
+ggplot(minorities, aes(x=`% Minorities`, y=`Economic Need Index`))+
+  geom_point()+
+  geom_smooth(method='lm') +
+  ggtitle("Percent Minorities vs Economic Need Index",) +
+  xlab("Percent of Minorities in School") +
+  ylab("Economic Need Index of School") 
+
+  
+         
+minoritiesschool <- school_data %>%
+  filter(Year=='2018') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`) %>%
+  filter(`% Minorities`> 0.500)
+
+economicneedindexschool <- school_data %>%
+  filter(Year=='2018') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`, `Economic Need Index`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`, `Economic Need Index`) %>%
+  filter(`Economic Need Index`> 0.500)
+
+minoritiesasian <- school_data %>%
+  filter(Year=='2018') %>%
+  select(`School Name`, `% Asian`) %>%
+  arrange(desc(`% Asian`)) %>%
+  filter(`% Asian`> 0.500)
+
+brooklyn <- c(1,1,1,1,1,1)
+brooklyn <-sum(brooklyn)
+manhattan <- c(1,1,1,1,1)
+MAN <- SUM(manhattan)
+bronx <- c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)
+BX <- sum(bronx)
+queens <- c(1,1)
+QN <- sum(queens)
+
+boroughdata <- data.frame(Borough=c("Brooklyn","Manhattan","Bronx","Queens"),
+                          Number_of_Schools= c(6,4,20,2))
+
+?data.frame
+
+barplot(as.numeric(boroughdata))
+
+ggplot(boroughdata, aes(x=Borough, y=Number_of_Schools))+
+  geom_bar(stat = 'identity', aes(fill=Borough)) +
+  ggtitle("Location of Schools with Minorities as Majority",) +
+  xlab("Percent of Minorities in School") +
+  ylab("Number of Schools") 
+
+library(ggplot2)
+
+ggplot(my_df, aes(x=BK, MAN, BX, QN))+
+         geom_bar(stat = 'identity')
+
+barplot(as.numeric(boroughdata), names.arg = c("a","b","c","d"))
+
+```
+
+
+#Which schools have the highest percent of female students in 2018? Which has the lowest? (not including all girls or all boys schools).
+```{r}
+
+  highestfemale <- school_data %>%
+    filter(Year=='2018') %>%
+    select(`School Name`, `% Female`) %>%
+    filter(!`% Female`== 1 & !`% Female`== 0 ) %>%
+    arrange(desc(`% Female`)) %>%
+    top_n(15) 
+ 
+
+
+library(ggplot2)
+ggplot(highestfemale, aes(x=`School Name`, y=`% Female`)) +
+  geom_bar(stat = 'identity')+
+  theme(axis.text.x = element_text(face="bold", color="#993333", 
+                           size=7, angle=45),
+          axis.text.y = element_text(face="bold", color="#993333", 
+                           size=7, angle=45))
+  
+  lowestfemale <- school_data %>%
+    filter(Year=='2018') %>%
+    select(`School Name`, `% Female`) %>%
+    filter(!`% Female`== 1 & !`% Female`== 0 ) %>%
+    arrange(`% Female`) %>%
+    top_n(-15)
+  
+  
+  
+```
+
+#Which schools are all boys schools? Which are all girls schools? 
+```{r}
+
+  allgirls <- school_data %>%
+    select(`School Name`, `% Female`) %>%
+    filter(`% Female`== 1) %>%
+    distinct()
+  
+  allboys <- school_data %>%
+    select(`School Name`, `% Male`) %>%
+    filter(`% Male`== 1) %>%
+    distinct()
+```
+
+
+
+
+```{r}
+library(tidyverse)
+library(dplyr)
+final_data <- read_csv('~/Downloads/2018-2019_School_Demographic_Snapshot.csv')
+final_data$Year <- substr(final_data$Year, 1, 4)
+final_data$Year <- as.numeric(final_data$Year)
+
+# read a single column
+final_data$Year
+final_data$`Economic Need Index`
+final_data$`# Poverty`
+final_data$`School Name`
+
+
+#What are the dropout rates between middle-school and highschool?
+
+final_data %>%
+  group_by(`School Name`) %>%
+  summarize(junior_high_school = mean(c(`Grade 6`,`Grade 7`, `Grade 8`), , na.rm = TRUE),
+            high_school = mean(c( `Grade 9`,`Grade 10`,`Grade 11`, `Grade 12`), na.rm = TRUE)) %>%
+  filter(junior_high_school!=0 & high_school!=0) %>%
+  mutate(dropout =  high_school-junior_high_school )
+
+#Is there a correlation between poverty and dropout rates
+
+#Creating a new data set
+#Table Avg and Drop Rates
+Dropout_rates_Avgs<-(final_data %>%
+                       group_by(`School Name`) %>%
+                       summarize(junior_high_school = mean(c(`Grade 6`,`Grade 7`, `Grade 8`), na.rm = TRUE),
+                                 high_school = mean(c( `Grade 9`,`Grade 10`,`Grade 11`, `Grade 12`), na.rm = TRUE)) %>%
+                       filter(junior_high_school!=0 & high_school!=0) %>%
+                       mutate(dropout =  junior_high_school-high_school ))
+
+#Joining Poverty and Dropout rates data set
+poverty_df <- final_data %>%
+  filter(`School Name` %in% Dropout_rates_Avgs$`School Name`) %>%
+  select(`# Poverty`, `School Name`) %>%
+  full_join(Dropout_rates_Avgs, by=c('School Name')) %>%
+  group_by(`School Name`) %>%
+  summarise( drop_mean = mean(dropout),
+             poverty_mean = mean(`# Poverty`)) %>%
+  filter(drop_mean >0)
+
+# Scatterplot/ Graph to see the correlation
+library(ggplot2)
+ggplot(poverty_df, aes(x=drop_mean , y= poverty_mean)) +  
+  geom_point() +
+  geom_smooth(method ='lm')+
+  ggtitle("Correlation Between Poverty and Drop-out Rates") +
+  xlab("Drop-Out Rate") +
+  ylab("Number of Students in Poverty") 
+
+
+#Checking to see if there a Pearson's correlation betwwen poverty and dropout?
+cor(poverty_df$drop_mean, poverty_df$poverty_mean)
+cor.test(poverty_df$drop_mean, poverty_df$poverty_mean)
+
+# Correlation between total enrollment and dropout
+T_En <- final_data %>%
+  group_by(`School Name`) %>%
+  summarize(junior_high_school = mean(c(`Grade 6`,`Grade 7`, `Grade 8`), na.rm = TRUE),
+            high_school = mean(c( `Grade 9`,`Grade 10`,`Grade 11`, `Grade 12`), na.rm = TRUE),
+            avg_e = mean(`Total Enrollment`)) %>%
+  filter(junior_high_school!=0 & high_school!=0) %>%
+  mutate(dropout = junior_high_school-high_school)
+
+library(ggplot2)
+ggplot(T_En, aes(x=dropout , y= avg_e)) +  
+  geom_point() +
+  geom_smooth(method='lm')+
+  ggtitle("Correlation Between Drop-out Rate and Total Enrollment") +
+  xlab("Drop-Out Rate") +
+  ylab("Total Enrollment") 
+```
+
+
+```{r}
+minoritiesschool2014<- school_data %>%
+  filter(Year=='2014') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`) %>%
+  filter(`% Minorities`> 0.500)
+
+minoritiesschool2015<- school_data %>%
+  filter(Year=='2015') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`) %>%
+  filter(`% Minorities`> 0.500)
+
+minoritiesschool2016<- school_data %>%
+  filter(Year=='2016') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`) %>%
+  filter(`% Minorities`> 0.500)
+
+
+minoritiesschool2017<- school_data %>%
+  filter(Year=='2017') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`) %>%
+  filter(`% Minorities`> 0.500)
+
+minoritiesschool2018<- school_data %>%
+  filter(Year=='2018') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`) %>%
+  filter(`% Minorities`> 0.500)
+
+
+
+economicneedindexschool <- school_data %>%
+  filter(Year=='2018') %>%
+  select(`School Name`, `% Black`, `% Asian`, `% Hispanic`, `Economic Need Index`) %>%
+  mutate(`% Minorities`= `% Black` + `% Asian`+`% Hispanic`) %>%
+  arrange(desc(`% Minorities`)) %>%
+  select(`School Name`, `% Minorities`, `Economic Need Index`) %>%
+  filter(`Economic Need Index`> 0.500)
+
+```
+
+
+
+
+```{r}
+
+samplingsd <- data.frame(Probability=c(1/3, 2/9, 2/9, 2/9),
+                         Value=c(0, 1.4142,3.5355, 4.9497))
+
+library(ggplot2)
+ggplot(samplingsd, aes(x=Value, y=Probability))+
+  geom_bar(stat = 'identity')
+
+
+```
+

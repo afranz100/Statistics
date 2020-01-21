@@ -1060,7 +1060,8 @@ ggplot(data.frame(var1,var2), aes(x=var1, y=var2))+
   geom_point()
 
 cor(var1, var2)
-cor.test(var1,var2)
+
+ (cor.test(var1,var2)$estimate)^2
 
 ```
 
@@ -1129,7 +1130,108 @@ N[n_vs_power == min(n_vs_power[n_vs_power>0.8])]
 ```
 
 
-##Drawing the line and equation for a correlation
+• Conduct a small power analysis to determine the minimum N needed to acheive a power of 80% using a correlation test (i.e.,cor.test(x,y)). To do this, you need to use random numbers from rnorm.
+## $p.value
+## [1] 0.9498592
+• Rˆ2 is called the coefficient of determination and it is usually used as a measure of the effect size. Conduct another power analysis that shows the numimum effect size needed to achieve 80% power using N = 20.
+
+```{r}
+N <- seq(3,1000,2)
+n_exp <- 100
+n_vs_power <- c()
+
+for(this_n in 1:length(N)) {
+  sample_size <- N[this_n]
+  sig_pval <- c()
+  
+  for (exp in 1:n_exp){
+  var10 <- rnorm(sample_size)
+  var11 <- var10 + rnorm(sample_size, sd=10)
+  corr_test <- cor.test(var10,var11)
+  sig_pval[exp] <- corr_test$p.value < 0.05
+  }
+  n_vs_power[this_n] <- mean(sig_pval)
+}
+
+library(ggplot2)
+ggplot(data.frame(N,n_vs_power), aes(x=N, y=n_vs_power))+
+  geom_line()+
+  geom_smooth()
+
+
+min(N[n_vs_power == min(n_vs_power[n_vs_power>0.8])])
+
+
+```
+
+
+```{r}
+
+N <- 20
+n_exp <- 100
+rsq_vs_power <- c()
+rsq <- c(0, 1, 0.01)
+
+for(this_n in 1:length(rsq)) {
+  this_rsqu <- rsq[this_n]
+  sig_rsq <- c()
+  
+  for (exp in 1:n_exp){
+  var10 <- rnorm(N)
+  var11 <- var10 + rnorm(N, sd=10)
+  corr_test <- cor.test(var10,var11)
+  sig_rsq[exp] <- corr_test$estimate
+  }
+  rsq_vs_power[this_n] <- mean(sig_rsq)
+}
+
+library(ggplot2)
+ggplot(data.frame(N,rsq_vs_power), aes(x=N, y=rsq_vs_power))+
+  geom_line()+
+  geom_smooth()
+
+
+min(rsq[rsq_vs_power == min(rsq_vs_power[rsq_vs_power>0.8])])
+
+
+
+power_vs_effect_size
+
+
+```
+
+
+
+```{r}
+power_vs_effect_size <- c()
+effect_size <- seq(0,1,0.01)
+
+for (effect_size_ind in 1:length(effect_size)) {
+  this_effect_size <- effect_size[effect_size_ind]
+  sample_size <- 20
+  pop_mean <- 70
+  pop_sd <- 20
+  alpha <- 0.05
+  n_runs <- 100
+  significance <- c()
+  for (run in 1:n_runs) {
+    grp_experimental <- rnorm(n=sample_size, mean=pop_mean+this_effect_size, sd=pop_sd)
+    grp_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd)
+    pvalue <- t.test(x=grp_experimental, y=grp_control)$p.value
+    significance[run] <- pvalue 
+  }
+power_vs_effect_size[effect_size_ind] <- mean(significance < alpha)
+}
+
+library(ggplot2)
+my_df <- data.frame(effect_size=effect_size, power=power_vs_effect_size)
+
+ggplot(my_df, aes(x=effect_size, y=power))+
+  geom_line()+
+  geom_point()
+```
+
+##Drawing the line and equationfor a correlation
 ```{r}
 var1 <- rnorm(100)
 var2 <- var1 + rnorm(100, sd=5)
@@ -1197,7 +1299,6 @@ average_slo <- mean(slo)
 
 
 ```
-
 
 
 

@@ -69,3 +69,32 @@ The randomization test does not make any assumptions about the distributions of 
 When we increase the N from 10 to 1000, you are less likley to have random differences between the control and the experimental group. Because they are randomly selected from the same distribution with the same mean and standard deviation, the more samples you have the more the two groups reflect their similarity and their differences come closer to zero. 
 
 
+
+Make a simulation of two groups (N=30 per group) drawn from the same population with a mean of 100 and a standard deviation of 15. Use the randomization test to calculate the probability of observing a difference of 15 or more between the two groups (either positive or negative difference) by chance.
+
+```{r}
+sample_size <- 30
+n_exps <- 1000
+pop_mean <- 100
+pop_sd <- 15
+group_experimental <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_control <- rnorm(n=sample_size, mean=pop_mean, sd=pop_sd) 
+group_score_both <- c(group_experimental, group_control) 
+group_assignments <- rep(c("A","B"), each=30)
+
+mean_differnces <- c()
+for (i in 1:n_exps){
+  shuffled_assignments <- sample(group_assignments, replace=FALSE)  
+  group_experimental_shuffled <- group_score_both[shuffled_assignments=='A'] 
+  group_control_shuffled <- group_score_both[shuffled_assignments=='B']
+  mean_experimental <- mean(group_experimental_shuffled)
+  mean_control <- mean(group_control_shuffled)
+  mean_diff <- mean_experimental- mean_control
+  mean_differnces[i] <- mean_diff
+}
+
+mean(mean_differnces > 10 | mean_differnces < -10)
+
+
+```
+

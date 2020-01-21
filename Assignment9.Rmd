@@ -17,6 +17,7 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 #Use simulations to determine the effect of the following on the t-value (from an independent sample t-test): 
 
 ##The sample size
+As sample size increases, the absolute value of the t statistic increases. The graph seems to show the opposite because the t-value is increasing negatively. 
 ```{r}
 sample_1_std <- 20
 sample_2_std <- 20
@@ -49,6 +50,7 @@ ggplot(my_data, aes(x=size, y=value)) +
 
 
 ##The standard deviations of the estimates
+As the standard deviation increases the absolute value of the t statistic decreases. The graph seemingly shows the opposite because the t-value is decreasing negatively (getting smaller).
 ```{r}
 
 sample_size <- 20
@@ -81,6 +83,7 @@ ggplot(my_data, aes(x=std, y=value)) +
 
 
 ##The effect size
+As the effect size increases, the t-value increases. 
 ```{r}
 
 sample_size <- 20
@@ -114,7 +117,7 @@ ggplot(my_data, aes(x=effect, y=value)) +
 ```
 
 #Use the same sample size and standard deviation for both groups. Which of those seem to increase the t-value?
-A larger sample size increases the absolute value of the t-value because you are increasing the amplification of the effect size. The larger the standard deviation decreases the absolute value of the t-value because the error is increased. 
+A larger sample size increases the absolute value of the t-value because you are increasing the amplification of the effect size. A larger standard deviation decreases the absolute value of the t-value because the error is increased. 
 ```{r}
 #Large sample size, small sd
 sample_size <- 100
